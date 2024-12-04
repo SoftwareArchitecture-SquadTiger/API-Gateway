@@ -1,0 +1,22 @@
+{
+  "name": "api-gateway",
+  "version": "1.0.0",
+  "description": "api gateway for team A and B",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vally",
+  "license": "ISC",
+  "dependencies": {
+    "api-gateway": "file:",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.1",
+    "helmet": "^8.0.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.7",
+    "redis": "^4.7.0"
+  }
+}
