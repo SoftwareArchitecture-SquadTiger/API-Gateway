@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-import mockRoutes from './routes/mockRoutes.js';
+import teamBRoutes from './routes/teamBRoutes.js';
 import loggerMiddleware from "./middlewares/loggerMiddleware.js";
 
 const app = express();
@@ -12,6 +12,6 @@ app.use(express.json());
 app.use(loggerMiddleware);
 
 //Routes
-app.use('/', mockRoutes);
+app.use('/admin-server', teamBRoutes);
 
 export default app;
