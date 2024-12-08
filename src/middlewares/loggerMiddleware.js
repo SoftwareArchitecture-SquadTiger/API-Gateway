@@ -22,7 +22,7 @@ const loggerMiddleware = (req, res, next) => {
         const duration = Date.now() - start; // Calculate response time
         const status = res.statusCode; 
         
-        console.log(`[${timestamp}] ${ip} ${method} ${url} ${status} ${duration}ms`); 
+        console.log(`[${timestamp}] IP:${ip} | Method:${method} | Route:${url} | Status:${status} | Time:${duration}ms`); 
     });
 
     next(); // Proceed to the next middleware/route handler
