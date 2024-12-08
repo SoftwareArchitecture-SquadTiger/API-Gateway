@@ -1,4 +1,3 @@
-//Custom log function
 const loggerMiddleware = (req, res, next) => {
     const method = req.method; // HTTP Method (GET, POST, etc.)
     const url = req.originalUrl; // Requested URL
