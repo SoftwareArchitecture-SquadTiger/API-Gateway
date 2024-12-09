@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-import teamBRoutes from './routes/teamBRoutes.js';
+import teamBRoutes from './routes/teamB.routes.js';
 import loggerMiddleware from "./middlewares/loggerMiddleware.js";
 
 const app = express();
