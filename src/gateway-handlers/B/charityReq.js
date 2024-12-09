@@ -9,7 +9,7 @@ const TEAM_B_BASE_URL = `http://${HOST}:${PORT_B}`;
 export const getAllCharities = async (req, res, next) => {
     try {
         const response = await axios.get(`${TEAM_B_BASE_URL}/charity/all`);
-        res.status(200).json(response.data);
+        res.status(response.status).json({ success: true, data: response.data });
     } catch (error) {
         console.error('Error fetching charities:', error.message);
 
@@ -28,9 +28,31 @@ export const getCharityById = async (req, res, next) => {
 
         const response = await axios.get(url)
 
-        res.status(200).json(response.data);
+        res.status(response.status).json({ success: true, data: response.data });
     } catch (error) {
         console.error(`Error fetching Charity by id: ${error}`);
+
+        const status = error.response?.status || 500;
+        const message = error.response?.data?.message || error.message || 'Internal Server Error';
+
+        res.status(status).json({ error: message });
+    }
+};
+
+//Create a charity
+export const createNewCharity = async (req, res, next) => {
+    try {
+        const url = `${TEAM_B_BASE_URL}/charity/create`;
+
+        const response = await axios.post(url, req.body, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        res.status(response.status).json({ success: true, data: response.data });
+    } catch (error) {
+        console.error(`Error creating charities: ${error.message}`);
 
         const status = error.response?.status || 500;
         const message = error.response?.data?.message || error.message || 'Internal Server Error';
@@ -51,7 +73,7 @@ export const updateCharityById = async (req, res, next) => {
             }
         });
 
-        res.status(response.status).json(response.data);
+        res.status(response.status).json({ success: true, data: response.data });
     } catch (error) {
         console.error(`Error update charity: ${error}`);
         
@@ -62,24 +84,22 @@ export const updateCharityById = async (req, res, next) => {
     }
 };
 
-//Create a charity
-export const createNewCharity = async (req, res, next) => {
+//Delete a Charity
+export const deleteCharityById = async (req, res, next) => {
     try {
-        const url = `${TEAM_B_BASE_URL}/charity/create`;
+        const { id } = req.params;
+        const url = `${TEAM_B_BASE_URL}/charity/delete/${id}`;
 
-        const response = await axios.post(url, req.body, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
+        const response = await axios.delete(url);
 
-        res.status(response.status).json(response.data);
+        res.status(response.status).json({ success: true, data: response.data });
     } catch (error) {
-        console.error(`Error creating charities: ${error.message}`);
-
+        console.error(`Error deleting charity: ${error}`);
+        
         const status = error.response?.status || 500;
         const message = error.response?.data?.message || error.message || 'Internal Server Error';
 
         res.status(status).json({ error: message });
     }
 };
+
