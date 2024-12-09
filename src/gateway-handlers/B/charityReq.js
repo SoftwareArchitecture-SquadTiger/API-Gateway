@@ -18,3 +18,26 @@ export const getAllCharities = async (req, res, next) => {
         res.status(status).json({ error: message });
     }
 };
+
+
+
+export const createNewCharity = async (req, res, next) => {
+    try {
+        const url = `${TEAM_B_BASE_URL}/charity/create`;
+
+        const response = await axios.post(url, req.body, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error(`Error creating charities: ${error.message}`);
+
+        const status = error.response?.status || 500;
+        const message = error.response?.data?.message || error.message || 'Internal Server Error';
+
+        res.status(status).json({ error: message });
+    }
+};
