@@ -39,6 +39,29 @@ export const getCharityById = async (req, res, next) => {
     }
 };
 
+//Update a Charity
+export const updateCharityById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const url = `${TEAM_B_BASE_URL}/charity/update/${id}`;
+
+        const response = await axios.put(url, req.body, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error(`Error update charity: ${error}`);
+        
+        const status = error.response?.status || 500;
+        const message = error.response?.data?.message || error.message || 'Internal Server Error';
+
+        res.status(status).json({ error: message });
+    }
+};
+
 //Create a charity
 export const createNewCharity = async (req, res, next) => {
     try {
