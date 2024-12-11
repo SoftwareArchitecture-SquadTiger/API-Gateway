@@ -8,7 +8,7 @@ const TEAM_B_BASE_URL = `http://${HOST}:${PORT_B}`;
 export const getAllDonors = async (req, res, next) => {
     try {
         const response = await axios.get(`${TEAM_B_BASE_URL}/donor/all`);
-        res.status(200).json(response.data);
+        res.status(200).json({ donorResponse: response.data });
     } catch (error) {
         console.error('Error fetching donors:', error.message);
 
@@ -19,3 +19,20 @@ export const getAllDonors = async (req, res, next) => {
     }
 };
 
+export const getDonorById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const url = `${TEAM_B_BASE_URL}/donor/${id}`;
+        
+        const response = await axios.get(url);
+
+        res.status(response.status).json({ donorResponse: response.data });
+    } catch (error) {
+        console.error('Error fetching donor:', error.message);
+
+        const status = error.response?.status || 500;
+        const message = error.response?.data?.message || error.message || 'Internal Server Error';
+
+        res.status(status).json({ error: message });
+    }
+};
