@@ -66,11 +66,7 @@ export const updateCharityById = async (req, res, next) => {
     const { id } = req.params;
     const url = `${TEAM_B_BASE_URL}/charity/update/${id}`;
 
-    const response = await axios.put(url, req.body, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.put(url, req.body);
 
     res.status(response.status).json({ charityResponse: response.data });
   } catch (error) {
