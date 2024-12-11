@@ -1,5 +1,6 @@
 import axios from "axios";
 import "dotenv/config";
+import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
 
 const HOST = process.env.HOST;
 const PORT_B = process.env.TEAM_B_PORT;
@@ -11,13 +12,7 @@ export const getAllCharities = async (req, res, next) => {
     const response = await axios.get(`${TEAM_B_BASE_URL}/charity/all`);
     res.status(response.status).json({ charityResponse: response.data });
   } catch (error) {
-    console.error("Error fetching charities:", error.message);
-
-    const status = error.response?.status || 500;
-    const message =
-      error.response?.data?.message || error.message || "Internal Server Error";
-
-    res.status(status).json({ error: message });
+    handleAxiosErrorResponse(error, res);
   }
 };
 
@@ -31,13 +26,7 @@ export const getCharityById = async (req, res, next) => {
 
     res.status(response.status).json({ charityResponse: response.data });
   } catch (error) {
-    console.error(`Error fetching Charity by id: ${error}`);
-
-    const status = error.response?.status || 500;
-    const message =
-      error.response?.data?.message || error.message || "Internal Server Error";
-
-    res.status(status).json({ error: message });
+    handleAxiosErrorResponse(error, res);
   }
 };
 
@@ -50,13 +39,7 @@ export const createNewCharity = async (req, res, next) => {
 
     res.status(response.status).json({ charityResponse: response.data });
   } catch (error) {
-    console.error(`Error creating charity: ${error.message}`);
-
-    const status = error.response?.status || 500;
-    const message =
-      error.response?.data?.message || error.message || "Internal Server Error";
-
-    res.status(status).json({ error: message });
+    handleAxiosErrorResponse(error, res);
   }
 };
 
@@ -70,13 +53,7 @@ export const updateCharityById = async (req, res, next) => {
 
     res.status(response.status).json({ charityResponse: response.data });
   } catch (error) {
-    console.error(`Error update charity: ${error}`);
-
-    const status = error.response?.status || 500;
-    const message =
-      error.response?.data?.message || error.message || "Internal Server Error";
-
-    res.status(status).json({ error: message });
+    handleAxiosErrorResponse(error, res);
   }
 };
 
@@ -90,12 +67,6 @@ export const deleteCharityById = async (req, res, next) => {
 
     res.status(response.status).json({ charityResponse: response.data });
   } catch (error) {
-    console.error(`Error deleting charity: ${error}`);
-
-    const status = error.response?.status || 500;
-    const message =
-      error.response?.data?.message || error.message || "Internal Server Error";
-
-    res.status(status).json({ error: message });
+    handleAxiosErrorResponse(error, res);
   }
 };
