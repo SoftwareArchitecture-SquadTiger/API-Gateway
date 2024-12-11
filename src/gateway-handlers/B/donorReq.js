@@ -54,3 +54,20 @@ export const createNewDonor = async (req, res, next) => {
     }
 };
 
+export const updateDonorById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const url = `${TEAM_B_BASE_URL}/donor/update/${id}`;
+
+        const response = await axios.put(url, req.body);
+
+        res.status(response.status).json({ donorResponse: response.data });
+    } catch (error) {
+        console.error(`Error updating donor: ${error.message}`);
+
+        const status = error.response?.status || 500;
+        const message = error.response?.data?.message || error.message || 'Internal Server Error';
+
+        res.status(status).json({ error: message });
+    }
+};
