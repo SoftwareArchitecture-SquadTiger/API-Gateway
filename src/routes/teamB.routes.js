@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllDonors, getDonorById } from "../gateway-handlers/B/donorReq.js";
+import { createNewDonor, getAllDonors, getDonorById } from "../gateway-handlers/B/donorReq.js";
 import {
   createNewCharity,
   deleteCharityById,
@@ -13,6 +13,7 @@ const router = express.Router();
 //Donor
 router.get("/donors", getAllDonors); //GET all donors
 router.get("/donor/:id",getDonorById); //GET donor by id
+router.post("/donor/create",createNewDonor); //POST a new donor
 
 //Charity
 router.get("/charities", getAllCharities); //GET all charities
