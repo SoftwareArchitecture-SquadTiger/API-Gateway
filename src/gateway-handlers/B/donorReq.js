@@ -71,3 +71,21 @@ export const updateDonorById = async (req, res, next) => {
         res.status(status).json({ error: message });
     }
 };
+
+export const deleteDonorById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const url = `${TEAM_B_BASE_URL}/donor/delete/${id}`;
+
+        const response = await axios.delete(url);
+
+        res.status(response.status).json({ donorResponse: response.data });
+    } catch (error) {
+        console.error(`Error deleting donor: ${error}`);
+
+        const status = error.response?.status || 500;
+        const message = error.response?.data?.message || error.message || 'Internal Server Error';
+
+        res.status(status).json({ error: message });
+    }
+};
