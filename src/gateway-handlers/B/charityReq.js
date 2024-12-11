@@ -46,11 +46,7 @@ export const createNewCharity = async (req, res, next) => {
   try {
     const url = `${TEAM_B_BASE_URL}/charity/create`;
 
-    const response = await axios.post(url, req.body, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.post(url, req.body);
 
     res.status(response.status).json({ charityResponse: response.data });
   } catch (error) {
