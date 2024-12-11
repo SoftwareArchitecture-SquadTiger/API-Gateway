@@ -5,87 +5,97 @@ const HOST = process.env.HOST;
 const PORT_B = process.env.TEAM_B_PORT;
 const TEAM_B_BASE_URL = `http://${HOST}:${PORT_B}`;
 
+//Get all donors
 export const getAllDonors = async (req, res, next) => {
-    try {
-        const response = await axios.get(`${TEAM_B_BASE_URL}/donor/all`);
-        res.status(200).json({ donorResponse: response.data });
-    } catch (error) {
-        console.error('Error fetching donors:', error.message);
+  try {
+    const response = await axios.get(`${TEAM_B_BASE_URL}/donor/all`);
+    res.status(200).json({ donorResponse: response.data });
+  } catch (error) {
+    console.error("Error fetching donors:", error.message);
 
-        const status = error.response?.status || 500;
-        const message = error.response?.data?.message || error.message || 'Internal Server Error';
+    const status = error.response?.status || 500;
+    const message =
+      error.response?.data?.message || error.message || "Internal Server Error";
 
-        res.status(status).json({ error: message });
-    }
+    res.status(status).json({ error: message });
+  }
 };
 
+//Get a donor via id
 export const getDonorById = async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        const url = `${TEAM_B_BASE_URL}/donor/${id}`;
-        
-        const response = await axios.get(url);
+  try {
+    const { id } = req.params;
+    const url = `${TEAM_B_BASE_URL}/donor/${id}`;
 
-        res.status(response.status).json({ donorResponse: response.data });
-    } catch (error) {
-        console.error('Error fetching donor:', error.message);
+    const response = await axios.get(url);
 
-        const status = error.response?.status || 500;
-        const message = error.response?.data?.message || error.message || 'Internal Server Error';
+    res.status(response.status).json({ donorResponse: response.data });
+  } catch (error) {
+    console.error("Error fetching donor:", error.message);
 
-        res.status(status).json({ error: message });
-    }
+    const status = error.response?.status || 500;
+    const message =
+      error.response?.data?.message || error.message || "Internal Server Error";
+
+    res.status(status).json({ error: message });
+  }
 };
 
+//Create a donor
 export const createNewDonor = async (req, res, next) => {
-    try {
-        const url = `${TEAM_B_BASE_URL}/donor/create`;
+  try {
+    const url = `${TEAM_B_BASE_URL}/donor/create`;
 
-        const response = await axios.post(url, req.body);
+    const response = await axios.post(url, req.body);
 
-        res.status(response.status).json({ donorResponse: response.data });
-    } catch (error) {
-        console.error('Error creating donor:', error.message);
+    res.status(response.status).json({ donorResponse: response.data });
+  } catch (error) {
+    console.error("Error creating donor:", error.message);
 
-        const status = error.response?.status || 500;
-        const message = error.response?.data?.message || error.message || 'Internal Server Error';
+    const status = error.response?.status || 500;
+    const message =
+      error.response?.data?.message || error.message || "Internal Server Error";
 
-        res.status(status).json({ error: message });
-    }
+    res.status(status).json({ error: message });
+  }
 };
 
+//Update a donor
 export const updateDonorById = async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        const url = `${TEAM_B_BASE_URL}/donor/update/${id}`;
+  try {
+    const { id } = req.params;
+    const url = `${TEAM_B_BASE_URL}/donor/update/${id}`;
 
-        const response = await axios.put(url, req.body);
+    const response = await axios.put(url, req.body);
 
-        res.status(response.status).json({ donorResponse: response.data });
-    } catch (error) {
-        console.error(`Error updating donor: ${error.message}`);
+    res.status(response.status).json({ donorResponse: response.data });
+  } catch (error) {
+    console.error(`Error updating donor: ${error.message}`);
 
-        const status = error.response?.status || 500;
-        const message = error.response?.data?.message || error.message || 'Internal Server Error';
+    const status = error.response?.status || 500;
+    const message =
+      error.response?.data?.message || error.message || "Internal Server Error";
 
-        res.status(status).json({ error: message });
-    }
+    res.status(status).json({ error: message });
+  }
 };
 
+//Delete a donor
 export const deleteDonorById = async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        const url = `${TEAM_B_BASE_URL}/donor/delete/${id}`;
+  try {
+    const { id } = req.params;
+    const url = `${TEAM_B_BASE_URL}/donor/delete/${id}`;
 
-        const response = await axios.delete(url);
+    const response = await axios.delete(url);
 
-        res.status(response.status).json({ donorResponse: response.data });
-    } catch (error) {
-        console.error(`Error deleting donor: ${error}`);
+    res.status(response.status).json({ donorResponse: response.data });
+  } catch (error) {
+    console.error(`Error deleting donor: ${error}`);
 
-        const status = error.response?.status || 500;
-        const message = error.response?.data?.message || error.message || 'Internal Server Error';
+    const status = error.response?.status || 500;
+    const message =
+      error.response?.data?.message || error.message || "Internal Server Error";
 
-        res.status(status).json({ error: message });
-    }
+    res.status(status).json({ error: message });
+  }
 };

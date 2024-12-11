@@ -21,7 +21,7 @@ export const getAllCharities = async (req, res, next) => {
   }
 };
 
-//Get charity by id
+//Get charity via id
 export const getCharityById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -60,7 +60,7 @@ export const createNewCharity = async (req, res, next) => {
   }
 };
 
-//Update a Charity
+//Update a charity
 export const updateCharityById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -80,7 +80,7 @@ export const updateCharityById = async (req, res, next) => {
   }
 };
 
-//Delete a Charity
+//Delete a charity
 export const deleteCharityById = async (req, res, next) => {
   try {
     const { id } = req.params;
