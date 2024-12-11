@@ -54,7 +54,7 @@ export const createNewCharity = async (req, res, next) => {
 
     res.status(response.status).json({ charityResponse: response.data });
   } catch (error) {
-    console.error(`Error creating charities: ${error.message}`);
+    console.error(`Error creating charity: ${error.message}`);
 
     const status = error.response?.status || 500;
     const message =
