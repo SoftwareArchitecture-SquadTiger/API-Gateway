@@ -26,6 +26,16 @@ export const getProjectById = async (req, res, next) => {
     }
 };
 
+export const createNewProject = async (req, res, next) => {
+    try {
+        const response = await axios.post(`${TEAM_A_BASE_URL}/api/projects`);
+
+        res.status(response.status).json({ projectResponse: response.data });
+    } catch (error) {
+        handleAxiosErrorResponse(error, res);
+    }
+};
+
 export const updateProjectById = async (req, res, next) => {
     try {
         const { id } = req.params;
