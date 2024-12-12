@@ -15,3 +15,18 @@ export const getAllProjects = async (req, res, next) => {
     }
 };
 
+export const getProjectById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const response = await axios.get(`${TEAM_A_BASE_URL}/api/projects/${id}`);
+
+        res.status(response.status).json({})
+    } catch (error) {
+        handleAxiosErrorResponse(error, res);        
+    }
+};
+
+
+
+
+ 
