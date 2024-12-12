@@ -20,11 +20,23 @@ export const getProjectById = async (req, res, next) => {
         const { id } = req.params;
         const response = await axios.get(`${TEAM_A_BASE_URL}/api/projects/${id}`);
 
-        res.status(response.status).json({})
+        res.status(response.status).json({ projectResponse: response.data })
     } catch (error) {
         handleAxiosErrorResponse(error, res);        
     }
 };
+
+export const updateProjectById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const response = await axios.put(`${TEAM_A_BASE_URL}/api/projects/${id}`,req.body);
+
+        res.status(response.status).json({ projectResponse: response.data });
+    } catch (error) {
+        handleAxiosErrorResponse(error, res);
+    }
+};
+
 
 
 
