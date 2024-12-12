@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 
 import teamBRoutes from './routes/teamB.routes.js';
+import teamARoutes from './routes/teamA.routes.js';
 import loggerMiddleware from "./middlewares/loggerMiddleware.js";
 
 const app = express();
@@ -13,5 +14,6 @@ app.use(loggerMiddleware);
 
 //Routes
 app.use('/admin-server', teamBRoutes);
+app.use('/client-server', teamARoutes);
 
 export default app;
