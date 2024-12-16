@@ -10,7 +10,11 @@ const kafka = new Kafka({
 });
 
 const producer = kafka.producer();
-const consumer = kafka.consumer({ groupId: "api-gateway" });
+const consumer = kafka.consumer({
+  groupId: "api-gateway",
+  sessionTimeout: 30000,
+  heartbeatInterval: 10000,
+});
 
 //Pending reuqests map to track responses
 const pendingRequests = new Map();
@@ -56,7 +60,7 @@ export const runKafkaResponseConsumer = async (topic) => {
     await consumer.run({
       eachMessage: async ({ message }) => {
         console.log(`Received raw message: ${message.value.toString()}`);
-        
+
         const { correlationId, ...response } = JSON.parse(
           message.value.toString()
         );
@@ -67,7 +71,9 @@ export const runKafkaResponseConsumer = async (topic) => {
           pendingRequests.delete(correlationId);
           resolve(response);
         } else {
-            console.warn(`No pending request found for correlationId: ${correlationId}`)
+          console.warn(
+            `No pending request found for correlationId: ${correlationId}`
+          );
         }
       },
     });
