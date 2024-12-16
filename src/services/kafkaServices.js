@@ -55,12 +55,9 @@ export const runKafkaResponseConsumer = async (topic) => {
 
     await consumer.run({
       eachMessage: async ({ message }) => {
-        console.log(`Received raw message: ${message.value.toString()}`);
-        
         const { correlationId, ...response } = JSON.parse(
           message.value.toString()
         );
-        console.log(`Parsed response: CorrelationId: ${correlationId}`);
 
         if (pendingRequests.has(correlationId)) {
           const { resolve, timeoutId } = pendingRequests.get(correlationId);
