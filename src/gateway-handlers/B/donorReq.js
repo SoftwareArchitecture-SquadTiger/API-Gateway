@@ -2,14 +2,13 @@ import axios from "axios";
 import "dotenv/config";
 import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
 import { sendKafkaMessageWithResponse } from "../../services/kafkaServices.js";
-import { response } from "express";
 
 const HOST = process.env.HOST;
 const PORT_B = process.env.TEAM_B_PORT;
 const TEAM_B_BASE_URL = `http://${HOST}:${PORT_B}`;
 
 //Get all donors
-export const getAllDonors = async (req, res, next) => {
+export const getAllDonors = async (req, res) => {
   try {
     const response = await sendKafkaMessageWithResponse('donor-request', {
       action: 'GET_ALL',
@@ -17,13 +16,12 @@ export const getAllDonors = async (req, res, next) => {
     });
     res.status(200).json(response);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
+    handleAxiosErrorResponse(error, res);
   }
 };
 
 //Get a donor via id
-export const getDonorById = async (req, res, next) => {
+export const getDonorById = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -34,19 +32,19 @@ export const getDonorById = async (req, res, next) => {
 
     res.status(200).json(response);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
+    handleAxiosErrorResponse(error, res);
   }
 };
 
 //Create a donor
 export const createNewDonor = async (req, res, next) => {
   try {
-    const url = `${TEAM_B_BASE_URL}/donor/create`;
+    const response = await sendKafkaMessageWithResponse('donor-request', {
+      action: 'ADD',
+      data: req.body,
+    });
 
-    const response = await axios.post(url, req.body);
-
-    res.status(response.status).json({ donorResponse: response.data });
+    res.status(200).json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
   }
