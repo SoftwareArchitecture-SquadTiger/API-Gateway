@@ -2,6 +2,7 @@ import axios from "axios";
 import "dotenv/config";
 import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
 import { sendKafkaMessageWithResponse } from "../../services/kafkaServices.js";
+import { response } from "express";
 
 const HOST = process.env.HOST;
 const PORT_B = process.env.TEAM_B_PORT;
@@ -16,6 +17,7 @@ export const getAllDonors = async (req, res, next) => {
     });
     res.status(200).json(response);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -24,13 +26,16 @@ export const getAllDonors = async (req, res, next) => {
 export const getDonorById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const url = `${TEAM_B_BASE_URL}/donor/${id}`;
 
-    const response = await axios.get(url);
+    const response = await sendKafkaMessageWithResponse('donor-request', {
+      action: 'GET_BY_ID',
+      data: {id: id}
+    });
 
-    res.status(response.status).json({ donorResponse: response.data });
+    res.status(200).json(response);
   } catch (error) {
-    handleAxiosErrorResponse(error, res);
+    console.error(error);
+    res.status(500).json({ error: error.message });
   }
 };
 
