@@ -17,7 +17,7 @@ const pendingRequests = new Map();
 
 export const sendKafkaMessageWithResponse = async (topic, message) => {
   const correlationId = uuidv4();
-  const timeout = 20000;
+  const timeout = 10000;
 
   return new Promise(async (resolve, reject) => {
     //Store pending requests
@@ -55,6 +55,8 @@ export const runKafkaResponseConsumer = async (topic) => {
 
     await consumer.run({
       eachMessage: async ({ message }) => {
+        console.log(`Received raw message: ${message.value.toString()}`);
+        
         const { correlationId, ...response } = JSON.parse(
           message.value.toString()
         );
