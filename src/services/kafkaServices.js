@@ -2,6 +2,11 @@ import "dotenv/config";
 import { Kafka, logLevel } from "kafkajs";
 import { v4 as uuidv4 } from "uuid";
 import { logKafkaMessage, formatKafkaLog } from "../utils/kafkaLogHandler.js";
+import {
+  addPendingRequest,
+  deletePendingRequest,
+  resolvePendingRequest,
+} from "../utils/requestHandler.js";
 
 const BROKER_PORT = process.env.BROKER_PORT;
 
@@ -20,23 +25,17 @@ const consumer = kafka.consumer({
   rebalanceTimeout: 15000, //Duration of Kafka waits during a rebalance process
 });
 
-//Pending request map to track responses
-const pendingRequests = new Map();
-
 export const sendKafkaMessageWithResponse = async (topic, message) => {
   const correlationId = uuidv4();
-  const timeout = 20000; //The wait time for the response from kafka
+  const timeoutMs = 20000; //The wait time for the response from kafka (20s)
 
   return new Promise(async (resolve, reject) => {
-    //Store pending requests
-    pendingRequests.set(correlationId, {
-      resolve,
-      reject,
-      timeoutId: setTimeout(() => {
-        pendingRequests.delete(correlationId);
-        reject(new Error("Timeout: No response from Kafka"));
-      }, timeout),
-    });
+    const timeoutId = setTimeout(() => {
+      deletePendingRequest(correlationId);
+      reject(new Error(`Timeout: The consumer may not listening to Kafka`));
+    }, timeoutMs);
+
+    addPendingRequest(correlationId, resolve, timeoutId);
 
     try {
       await producer.connect();
@@ -46,7 +45,7 @@ export const sendKafkaMessageWithResponse = async (topic, message) => {
       });
       logKafkaMessage("producer", topic, correlationId);
     } catch (error) {
-      pendingRequests.delete(correlationId); // Clean up on failure by deleting the stored id
+      deletePendingRequest(correlationId); // Clean up on failure by deleting the stored id
       reject(error); // Reject the promise if sending fails
     } finally {
       await producer.disconnect();
@@ -54,32 +53,24 @@ export const sendKafkaMessageWithResponse = async (topic, message) => {
   });
 };
 
-export const runKafkaResponseConsumer = async (topic) => {
+export const runKafkaResponseConsumer = async (topics) => {
   try {
     await consumer.connect();
-    await consumer.subscribe({ topic: topic, fromBeginning: false });
+
+    await consumer.subscribe({ topics: topics, fromBeginning: false });
 
     await consumer.run({
-      eachMessage: async ({ message }) => {
+      eachMessage: async ({ topic, message }) => {
         const { correlationId, ...response } = JSON.parse(
           message.value.toString()
         );
 
         logKafkaMessage("consumer", topic, correlationId);
 
-        if (pendingRequests.has(correlationId)) {
-          const { resolve, timeoutId } = pendingRequests.get(correlationId);
-          clearTimeout(timeoutId);
-          pendingRequests.delete(correlationId);
-          resolve(response);
-        } else {
-          console.warn(
-            `No pending request found for correlationId: ${correlationId}`
-          );
-        }
+        resolvePendingRequest(correlationId, response);
       },
     });
   } catch (error) {
-    console.error(`Error running Kafka Response Consumer: ${error}`);
+    console.error(`Error running Kafka Response Consumer - ${error}`);
   }
 };
