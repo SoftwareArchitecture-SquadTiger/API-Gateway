@@ -1,11 +1,6 @@
-import axios from "axios";
 import "dotenv/config";
 import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
 import { sendKafkaMessageWithResponse } from "../../services/kafkaServices.js";
-
-const HOST = process.env.HOST;
-const PORT_B = process.env.TEAM_B_PORT;
-const TEAM_B_BASE_URL = `http://${HOST}:${PORT_B}`;
 
 //Get all donors
 export const getAllDonors = async (req, res) => {
