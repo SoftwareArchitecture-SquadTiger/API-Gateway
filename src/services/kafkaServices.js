@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { Kafka } from "kafkajs";
 import { v4 as uuidv4 } from "uuid";
+import { logKafkaMessage } from "../utils/logKafkaMessage.js";
 
 const BROKER_PORT = process.env.BROKER_PORT;
 
@@ -41,9 +42,7 @@ export const sendKafkaMessageWithResponse = async (topic, message) => {
         topic: topic,
         messages: [{ value: JSON.stringify({ ...message, correlationId }) }],
       });
-      console.log(
-        `Message sent to ${topic} with correlationId: ${correlationId}`
-      );
+      logKafkaMessage("producer", topic, correlationId);
     } catch (error) {
       pendingRequests.delete(correlationId); // Clean up on failure by deleting the stored id
       reject(error); // Reject the promise if sending fails
@@ -60,11 +59,11 @@ export const runKafkaResponseConsumer = async (topic) => {
 
     await consumer.run({
       eachMessage: async ({ message }) => {
-        console.log(`Received raw message: ${message.value.toString()}`);
-
         const { correlationId, ...response } = JSON.parse(
           message.value.toString()
         );
+
+        logKafkaMessage("consumer", topic, correlationId);
 
         if (pendingRequests.has(correlationId)) {
           const { resolve, timeoutId } = pendingRequests.get(correlationId);
