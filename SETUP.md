@@ -22,6 +22,8 @@ Make sure you have the following installed on your system:
 3. **Install Dependencies**
    ```bash
    npm i
-4. **Start the Development Server**
+4. **Wait for team B system (container) to fully up and running**
+5. **Start the server**
    ```bash
-   npm run dev
+   npm run main
+6. **Wait for the log:** `Level: INFO | Namespace: ConsumerGroup | Message: Consumer has joined the group | GroupID: api-gateway` **The application should be ready!**
