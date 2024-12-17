@@ -1,71 +1,79 @@
-import axios from "axios";
 import "dotenv/config";
 import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
-
-const HOST = process.env.HOST;
-const PORT_B = process.env.TEAM_B_PORT;
-const TEAM_B_BASE_URL = `http://${HOST}:${PORT_B}`;
+import { sendKafkaMessageWithResponse } from "../../services/kafkaServices.js";
 
 //Get all donors
-export const getAllDonors = async (req, res, next) => {
+export const getAllDonors = async (req, res) => {
   try {
-    const response = await axios.get(`${TEAM_B_BASE_URL}/donor/all`);
-    res.status(200).json({ donorResponse: response.data });
+    const response = await sendKafkaMessageWithResponse("donor-request", {
+      action: "GET_ALL",
+      data: {},
+    });
+    res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
   }
 };
 
 //Get a donor via id
-export const getDonorById = async (req, res, next) => {
+export const getDonorById = async (req, res) => {
   try {
     const { id } = req.params;
-    const url = `${TEAM_B_BASE_URL}/donor/${id}`;
 
-    const response = await axios.get(url);
+    const response = await sendKafkaMessageWithResponse("donor-request", {
+      action: "GET_BY_ID",
+      data: { id: id },
+    });
 
-    res.status(response.status).json({ donorResponse: response.data });
+    res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
   }
 };
 
 //Create a donor
-export const createNewDonor = async (req, res, next) => {
+export const createNewDonor = async (req, res) => {
   try {
-    const url = `${TEAM_B_BASE_URL}/donor/create`;
+    const data = req.body;
 
-    const response = await axios.post(url, req.body);
+    const response = await sendKafkaMessageWithResponse("donor-request", {
+      action: "ADD",
+      data: data,
+    });
 
-    res.status(response.status).json({ donorResponse: response.data });
+    res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
   }
 };
 
 //Update a donor
-export const updateDonorById = async (req, res, next) => {
+export const updateDonorById = async (req, res) => {
   try {
     const { id } = req.params;
-    const url = `${TEAM_B_BASE_URL}/donor/update/${id}`;
 
-    const response = await axios.put(url, req.body);
+    const response = await sendKafkaMessageWithResponse("donor-request", {
+      action: "UPDATE",
+      data: { id: id, update: req.body },
+    });
 
-    res.status(response.status).json({ donorResponse: response.data });
+    res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
   }
 };
 
 //Delete a donor
-export const deleteDonorById = async (req, res, next) => {
+export const deleteDonorById = async (req, res) => {
   try {
     const { id } = req.params;
-    const url = `${TEAM_B_BASE_URL}/donor/delete/${id}`;
 
-    const response = await axios.delete(url);
+    const response = await sendKafkaMessageWithResponse("donor-request", {
+      action: "DELETE",
+      data: { id: id },
+    });
 
-    res.status(response.status).json({ donorResponse: response.data });
+    res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
   }
