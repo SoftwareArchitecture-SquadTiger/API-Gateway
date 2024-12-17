@@ -17,7 +17,7 @@ const consumer = kafka.consumer({
   rebalanceTimeout: 15000, //Duration of Kafka waits during a rebalance process
 });
 
-//Pending reuqests map to track responses
+//Pending request map to track responses
 const pendingRequests = new Map();
 
 export const sendKafkaMessageWithResponse = async (topic, message) => {
