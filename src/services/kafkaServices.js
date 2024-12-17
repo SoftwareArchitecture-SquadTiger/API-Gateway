@@ -1,13 +1,15 @@
 import "dotenv/config";
-import { Kafka } from "kafkajs";
+import { Kafka, logLevel } from "kafkajs";
 import { v4 as uuidv4 } from "uuid";
-import { logKafkaMessage } from "../utils/logKafkaMessage.js";
+import { logKafkaMessage, formatKafkaLog } from "../utils/kafkaLogHandler.js";
 
 const BROKER_PORT = process.env.BROKER_PORT;
 
 const kafka = new Kafka({
   clientId: "api-gateway",
   brokers: [`localhost:${BROKER_PORT}`],
+  logLevel: logLevel.INFO,
+  logCreator: formatKafkaLog,
 });
 
 const producer = kafka.producer();
