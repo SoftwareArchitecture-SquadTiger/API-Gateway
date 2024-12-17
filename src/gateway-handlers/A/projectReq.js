@@ -1,7 +1,6 @@
 import axios from "axios";
 import "dotenv/config";
 import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
-import e from "cors";
 
 const HOST = process.env.HOST;
 const PORT_A = process.env.TEAM_A_PORT;
