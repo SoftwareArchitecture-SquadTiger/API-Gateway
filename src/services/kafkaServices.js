@@ -12,8 +12,9 @@ const kafka = new Kafka({
 const producer = kafka.producer();
 const consumer = kafka.consumer({
   groupId: "api-gateway",
-  sessionTimeout: 30000,
-  heartbeatInterval: 10000,
+  sessionTimeout: 10000, //Duration of Kafka waits to detect a dc consumer
+  heartbeatInterval: 3000, //Sends heartbeat frequently to make sure consumer is alive
+  rebalanceTimeout: 15000, //Duration of Kafka waits during a rebalance process
 });
 
 //Pending reuqests map to track responses
@@ -21,7 +22,7 @@ const pendingRequests = new Map();
 
 export const sendKafkaMessageWithResponse = async (topic, message) => {
   const correlationId = uuidv4();
-  const timeout = 10000;
+  const timeout = 20000; //The wait time for the response from kafka
 
   return new Promise(async (resolve, reject) => {
     //Store pending requests
@@ -55,7 +56,7 @@ export const sendKafkaMessageWithResponse = async (topic, message) => {
 export const runKafkaResponseConsumer = async (topic) => {
   try {
     await consumer.connect();
-    await consumer.subscribe({ topic: topic, fromBeginning: true });
+    await consumer.subscribe({ topic: topic, fromBeginning: false });
 
     await consumer.run({
       eachMessage: async ({ message }) => {
