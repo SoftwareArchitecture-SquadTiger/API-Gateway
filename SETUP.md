@@ -193,6 +193,3 @@ example
 | `id`      | `string` | **Required**. Id of item to Delete |
 
 
-### if something wrong pls contact 
-
-Open discord and chat   
