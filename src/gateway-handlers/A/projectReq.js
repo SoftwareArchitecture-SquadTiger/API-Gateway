@@ -139,6 +139,26 @@ export const getProjectsByCountry = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+export const getProjectsByCharityName = async (req, res, next) => { 
+    try{
+        const { charityName } = req.params;
+        const response = await axios.get(`${TEAM_A_BASE_URL}/api/projects/charity-name/${charityName}`);
+        res.status(response.status).json({ projectResponse: response.data });
+    } catch (error) {
+        handleAxiosErrorResponse(error, res);
+    }
+}
+export const getProjectsByTitle = async (req, res, next) => {
+    try {
+        const { title } = req.params;
+        const response = await axios.get(`${TEAM_A_BASE_URL}/api/projects/title/${title}`);
+
+        res.status(response.status).json({ projectResponse: response.data });
+    }
+    catch (error) {
+        handleAxiosErrorResponse(error, res);
+    }
+}
 export const getProjectsByRegion = async (req, res, next) => {
     try {
         const { region } = req.params;
@@ -165,7 +185,26 @@ export const getProjectByStatus = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+export const getProjectsByTargetAmountGte = async (req, res, next) => {
+    try {
+        const { targetAmount } = req.params;
+        const response = await axios.get(`${TEAM_A_BASE_URL}/api/projects/target-amount/gte/${targetAmount}`);
 
+        res.status(response.status).json({ projectResponse: response.data });
+    } catch (error) {
+        handleAxiosErrorResponse(error, res);
+    }
+}
+export const getProjectsByTargetAmountLte = async (req, res, next) => {
+    try {
+        const { targetAmount } = req.params;
+        const response = await axios.get(`${TEAM_A_BASE_URL}/api/projects/target-amount/lte/${targetAmount}`);
+
+        res.status(response.status).json({ projectResponse: response.data });
+    } catch (error) {
+        handleAxiosErrorResponse(error, res);
+    }
+}
 //post
 export const createNewProject = async (req, res, next) => {
     try {
@@ -177,6 +216,16 @@ export const createNewProject = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 };
+export const getProjectByCharityId = async (req, res, next) => { 
+    try{
+        const { charityId } = req.params;
+        const response = await axios.get(`${TEAM_A_BASE_URL}/api/projects/charity/${charityId}`);
+        res.status(response.status).json({ projectResponse: response.data });
+    } catch (error) {
+        handleAxiosErrorResponse(error, res);
+    }
+}
+
 //put
 export const updateProjectById = async (req, res, next) => {
     try {
