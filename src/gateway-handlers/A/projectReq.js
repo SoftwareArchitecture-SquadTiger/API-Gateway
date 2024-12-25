@@ -5,9 +5,131 @@ import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
 const HOST = process.env.HOST;
 const PORT_A = process.env.TEAM_A_PORT;
 const TEAM_A_BASE_URL = `http://${HOST}:${PORT_A}`;
+/** 
+Encrypt a JWS token using JWE and return the encrypted token.
+* @param {Object} req - The request object.
+* @param {Object} res - The response object.
+*/
+export const encryptUsingJWE = async (req, res) => {
+   try {
+       const { jws, entityId } = req.body;
+       if (!jws || !entityId) {
+           return res.status(400).json({ error: "JWS and entityId are required" });
+       }
+       // Forward the request to Team A's encryption API
+       const response = await axios.post(`${TEAM_A_BASE_URL}/api/jws/encrypt`, { jws, entityId });
+       // Return the response from Team A's service
+       res.status(response.status).json({ encryptedToken: response.data.encryptedToken });
+   } catch (error) {
+       handleAxiosErrorResponse(error, res);
+   }
+};
+/**
+* Decrypt a JWE token and return the original JWS.
+* @param {Object} req - The request object.
+* @param {Object} res - The response object.
+*/
+export const decryptUsingJWE = async (req, res) => {
+   try {
+       const { encryptedToken, entityId } = req.body;
+       if (!encryptedToken || !entityId) {
+           return res.status(400).json({ error: "Encrypted token and entityId are required" });
+       }
+       // Forward the request to Team A's decryption API
+       const response = await axios.get(`${TEAM_A_BASE_URL}/api/jws/decrypt`, { encryptedToken, entityId });
+       // Return the response from Team A's service
+       res.status(response.status).json({ jws: response.data.jws });
+   } catch (error) {
+       handleAxiosErrorResponse(error, res);
+   }
+};
+/**
+* Generate a new key pair for a specific entity.
+*/
+export const generateKeyPair = async (req, res) => {
+   try {
+       const { model, entityId } = req.params;
+       const response = await axios.post(`${TEAM_A_BASE_URL}/api/keys/model/${model}/entity/${entityId}`);
+       res.status(response.status).json({ message: response.data.message });
+   } catch (error) {
+       handleAxiosErrorResponse(error, res);
+   }
+};
+/**
+* Fetch the public key for a specific entity.
+*/
+export const fetchPublicKey = async (req, res) => {
+   try {
+       const { model, entityId } = req.params;
+       const response = await axios.get(`${TEAM_A_BASE_URL}/api/keys/model/${model}/entity/${entityId}`);
+       res.status(response.status).json({ publicKey: response.data.publicKey });
+   } catch (error) {
+       handleAxiosErrorResponse(error, res);
+   }
+};
+/**
+* Fetch the private key for a specific entity.
+*/
+export const fetchPrivateKey = async (req, res) => {
+   try {
+       const { model, entityId } = req.params;
 
-//encryption
-export
+       const response = await axios.get(`${TEAM_A_BASE_URL}/api/keys/model/${model}/entity/${entityId}/private`);
+       res.status(response.status).json({ privateKey: response.data.privateKey });
+   } catch (error) {
+       handleAxiosErrorResponse(error, res);
+   }
+};
+/**
+* Update the key pair for a specific entity.
+*/
+export const updateKeyPair = async (req, res) => {
+   try {
+       const { model, entityId } = req.params;
+       const response = await axios.put(`${TEAM_A_BASE_URL}/api/keys/model/${model}/entity/${entityId}`);
+       res.status(response.status).json({ message: response.data.message });
+   } catch (error) {
+       handleAxiosErrorResponse(error, res);
+   }
+};
+/**
+* Delete the key pair for a specific entity.
+*/
+export const deleteKeyPair = async (req, res) => {
+   try {
+       const { model, entityId } = req.params;
+       const response = await axios.delete(`${TEAM_A_BASE_URL}/api/keys/model/${model}/entity/${entityId}`);
+       res.status(response.status).json({ message: response.data.message });
+   } catch (error) {
+       handleAxiosErrorResponse(error, res);
+   }
+};
+/**
+* Encrypt data for a specific entity.
+*/
+export const encryptData = async (req, res) => {
+   try {
+       const { model, entityId } = req.params;
+       const { data } = req.body;
+       const response = await axios.post(`${TEAM_A_BASE_URL}/api/keys/encrypt/model/${model}/entity/${entityId}`, { data });
+       res.status(response.status).json({ encryptedData: response.data.encryptedData });
+   } catch (error) {
+       handleAxiosErrorResponse(error, res);
+   }
+};
+/**
+* Decrypt data for a specific entity.
+*/
+export const decryptData = async (req, res) => {
+   try {
+       const { model, entityId } = req.params;
+       const { encryptedData } = req.body;
+       const response = await axios.post(`${TEAM_A_BASE_URL}/api/keys/decrypt/model/${model}/entity/${entityId}`, { encryptedData });
+       res.status(response.status).json({ decryptedData: response.data.decryptedData });
+   } catch (error) {
+       handleAxiosErrorResponse(error, res);
+   }
+};
 
 
 

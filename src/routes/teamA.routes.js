@@ -22,7 +22,15 @@ import {
   getProjectByTargetAmountLte,
   getProjectByCharityName,
   getProjectByTitle,
-  getProjectByCharityId
+  getProjectByCharityId,
+  encryptUsingJWE,
+  decryptUsingJWE,
+  generateKeyPair,
+  fetchPublicKey,
+  fetchPrivateKey,
+  updateKeyPair,
+  deleteKeyPair,
+
 } from "../gateway-handlers/A/projectReq.js";
 
 const router = express.Router();
@@ -59,5 +67,14 @@ router.put("/project/update/:id", updateProjectById); //PUT a project by id (wor
 router.delete("/project/delete/:id", deleteProjectById); //DELETE a project by id
 //Encryption API
 
+router.post("/encrypt", encryptUsingJWE); 
+//Decryption API
+router.get("/decrypt", decryptUsingJWE); 
+// Key management routes
+router.post("/keys/model/:model/entity/:entityId", generateKeyPair);
+router.get("/keys/model/:model/entity/:entityId", fetchPublicKey);
+router.get("/keys/model/:model/entity/:entityId/private", fetchPrivateKey);
+router.put("/keys/model/:model/entity/:entityId", updateKeyPair);
+router.delete("/keys/model/:model/entity/:entityId", deleteKeyPair);
 
 export default router;
