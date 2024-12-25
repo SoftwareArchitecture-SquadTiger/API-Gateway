@@ -50,10 +50,10 @@ Test_Decrypt_JWE:
 Test_Decrypt_Auth_JWE:
   Method: GET
   URL: http://localhost:4000/api/keys/decrypt/model/auth/entity/1111
-  Status: 404
+  Status: Success
 Test_Encrypt_Auth_JWE:
   Method: GET
   URL: http://localhost:4000/api/keys/decrypt/model/auth/entity/1111
-  Status: 404
+  Status: Success
 
 
