@@ -23,15 +23,11 @@ import {
   getProjectByCharityName,
   getProjectByTitle,
   getProjectByCharityId,
-  encryptUsingJWE,
-  decryptUsingJWE,
-  generateKeyPair,
-  fetchPublicKey,
-  fetchPrivateKey,
-  updateKeyPair,
-  deleteKeyPair,
-
+  
 } from "../gateway-handlers/A/projectReq.js";
+import { encryptUsingJWE, encryptData  } from "../gateway-handlers/A/encryptionReq.js";
+import { decryptUsingJWE, decryptData } from "../gateway-handlers/A/decryptionReq.js";
+import { generateKeyPair, fetchPublicKey, fetchPrivateKey, updateKeyPair, deleteKeyPair } from "../gateway-handlers/A/keyReq.js";
 
 const router = express.Router();
 //total 21 now just 15
@@ -76,5 +72,7 @@ router.get("/keys/model/:model/entity/:entityId", fetchPublicKey);
 router.get("/keys/model/:model/entity/:entityId/private", fetchPrivateKey);
 router.put("/keys/model/:model/entity/:entityId", updateKeyPair);
 router.delete("/keys/model/:model/entity/:entityId", deleteKeyPair);
+router.post("/keys/encrypt/model/:model/entity/:entityId", encryptData);
+router.get("/keys/decrypt/model/:model/entity/:entityId", decryptData);
 
 export default router;
