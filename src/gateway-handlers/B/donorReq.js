@@ -31,6 +31,35 @@ export const getDonorById = async (req, res) => {
   }
 };
 
+//Get donors by categories
+export const getDonorsBySubscribedCategories = async (req, res) => {
+  try {
+    const { categories } = req.body;
+    const response = await sendKafkaMessageWithResponse("donor-request", {
+      action: "GET_BY_CATEGORIES",
+      data: { categories: categories },
+    });
+
+    res.json(response);
+  } catch (error) {
+    handleAxiosErrorResponse(error, res);
+  }
+};
+
+//Get donors by regions
+export const getDonorsBySubscribedRegions = async (req, res) => {
+  try {
+    const { regions } = req.body;
+    const response = await sendKafkaMessageWithResponse("donor-request", {
+      action: "GET_BY_REGIONS",
+      data: { regions: regions },
+    });
+
+    res.json(response);
+  } catch (error) {
+    handleAxiosErrorResponse(error, res);
+  }
+};
 //Create a donor
 export const createNewDonor = async (req, res) => {
   try {
@@ -47,7 +76,7 @@ export const createNewDonor = async (req, res) => {
   }
 };
 
-//Update a donor
+//Update a donor via id
 export const updateDonorById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -63,7 +92,7 @@ export const updateDonorById = async (req, res) => {
   }
 };
 
-//Delete a donor
+//Delete a donor via id
 export const deleteDonorById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -71,6 +100,37 @@ export const deleteDonorById = async (req, res) => {
     const response = await sendKafkaMessageWithResponse("donor-request", {
       action: "DELETE",
       data: { id: id },
+    });
+
+    res.json(response);
+  } catch (error) {
+    handleAxiosErrorResponse(error, res);
+  }
+};
+
+//Get subscriptions by email
+export const getSubscriptionsByEmail = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    const response = await sendKafkaMessageWithResponse("donor-request", {
+      action: "GET_SUBSCRIPTIONS_BY_EMAIL",
+      data: { email: email },
+    });
+
+    res.json(response);
+  } catch (error) {
+    handleAxiosErrorResponse(error, res);
+  }
+};
+
+//Get emails by categories
+export const getEmailsByCategories = async (req, res) => {
+  try {
+    const { categories } = req.body;
+    const response = await sendKafkaMessageWithResponse("donor-request", {
+      action: "GET_EMAILS_BY_CATEGORIES",
+      data: { categories: categories },
     });
 
     res.json(response);

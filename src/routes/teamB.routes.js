@@ -5,6 +5,10 @@ import {
   deleteDonorById,
   getAllDonors,
   getDonorById,
+  getDonorsBySubscribedCategories,
+  getDonorsBySubscribedRegions,
+  getEmailsByCategories,
+  getSubscriptionsByEmail,
   updateDonorById,
 } from "../gateway-handlers/B/donorReq.js";
 
@@ -20,14 +24,20 @@ const router = express.Router();
 
 //Donor
 router.get("/donors", getAllDonors); //GET all donors
-router.get("/donor/:id", getDonorById); //GET donor by id
+router.get("/donor/id/:id", getDonorById); //GET donor by id
+router.get("/donors/subscribe/categories", getDonorsBySubscribedCategories) //GET donors by categories
+router.get("/donors/subscribe/regions", getDonorsBySubscribedRegions) //GET donors by regions
 router.post("/donor/create", createNewDonor); //POST a new donor
 router.put("/donor/update/:id", updateDonorById); //PUT a donor by id
 router.delete("/donor/delete/:id", deleteDonorById); //DELETE a donor by id
 
+//Subscription
+router.get("/subscriptions/get/:email", getSubscriptionsByEmail); //GET regions & categories by email
+router.get("/subscriptions/emails/categories", getEmailsByCategories); //GET donors by categories
+
 //Charity
 router.get("/charities", getAllCharities); //GET all charities
-router.get("/charity/:id", getCharityById); //GET charity by id
+router.get("/charity/id/:id", getCharityById); //GET charity by id
 router.post("/charity/create", createNewCharity); //POST new charity
 router.put("/charity/update/:id", updateCharityById); //PUT a charity by id
 router.delete("/charity/delete/:id", deleteCharityById); //DELETE a charity by id
