@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
 import { sendKafkaMessageWithResponse } from "../../services/kafkaServices.js";
 
@@ -108,33 +107,3 @@ export const deleteDonorById = async (req, res) => {
   }
 };
 
-//Get subscriptions by email
-export const getSubscriptionsByEmail = async (req, res) => {
-  try {
-    const { email } = req.params;
-
-    const response = await sendKafkaMessageWithResponse("donor-request", {
-      action: "GET_SUBSCRIPTIONS_BY_EMAIL",
-      data: { email: email },
-    });
-
-    res.json(response);
-  } catch (error) {
-    handleAxiosErrorResponse(error, res);
-  }
-};
-
-//Get emails by categories
-export const getEmailsByCategories = async (req, res) => {
-  try {
-    const { categories } = req.body;
-    const response = await sendKafkaMessageWithResponse("donor-request", {
-      action: "GET_EMAILS_BY_CATEGORIES",
-      data: { categories: categories },
-    });
-
-    res.json(response);
-  } catch (error) {
-    handleAxiosErrorResponse(error, res);
-  }
-};
