@@ -7,8 +7,6 @@ import {
   getDonorById,
   getDonorsBySubscribedCategories,
   getDonorsBySubscribedRegions,
-  getEmailsByCategories,
-  getSubscriptionsByEmail,
   updateDonorById,
 } from "../gateway-handlers/B/donorReq.js";
 
@@ -19,6 +17,14 @@ import {
   getCharityById,
   updateCharityById,
 } from "../gateway-handlers/B/charityReq.js";
+
+import {
+  getSubscriptionsByEmail,
+  getEmailsByCategories,
+  createSubscription,
+  clearSubscription,
+  updateSubscription,
+} from "../gateway-handlers/B/subscriptionReq.js";
 
 const router = express.Router();
 
@@ -32,8 +38,11 @@ router.put("/donor/update/:id", updateDonorById); //PUT a donor by id
 router.delete("/donor/delete/:id", deleteDonorById); //DELETE a donor by id
 
 //Subscription
-router.get("/subscriptions/get/:email", getSubscriptionsByEmail); //GET regions & categories by email
-router.get("/subscriptions/emails/categories", getEmailsByCategories); //GET donors by categories
+router.get("/subscriptions/email/:email", getSubscriptionsByEmail); //GET regions & categories by email
+router.get("/subscriptions/emails/categories", getEmailsByCategories); //GET donors emails by categories
+router.post("/subscriptions/create", createSubscription); //POST a subscription
+router.put("/subscriptions/update/:email", updateSubscription); //PUT subscriptions by email 
+router.delete("/subscriptions/delete/:email", clearSubscription); //DELETE a subscriptions
 
 //Charity
 router.get("/charities", getAllCharities); //GET all charities
