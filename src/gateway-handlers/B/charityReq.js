@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
 import { sendKafkaMessageWithResponse } from "../../services/kafkaServices.js";
 
