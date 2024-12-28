@@ -73,6 +73,6 @@ router.get("/keys/model/:model/entity/:entityId/private", fetchPrivateKey);
 router.put("/keys/model/:model/entity/:entityId", updateKeyPair);
 router.delete("/keys/model/:model/entity/:entityId", deleteKeyPair);
 router.post("/keys/encrypt/model/:model/entity/:entityId", encryptData);
-router.get("/keys/decrypt/model/:model/entity/:entityId", decryptData);
+router.post("/keys/decrypt/model/:model/entity/:entityId", decryptData);
 
 export default router;

@@ -8,12 +8,8 @@ export const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Generate a unique ID for the request
-    const requestId = uuidv4();
-
     const response = await sendKafkaMessageWithResponse("login-request", {
       action: "LOGIN",
-      requestId, // Include the generated ID
       data: { username, password },
     });
 
@@ -31,11 +27,9 @@ export const registerUser = async (req, res) => {
     const { username, password, email } = req.body;
 
     // Generate a unique ID for the request
-    const requestId = uuidv4();
 
     const response = await sendKafkaMessageWithResponse("register-request", {
       action: "REGISTER",
-      requestId, // Include the generated ID
       data: { username, password, email },
     });
 
