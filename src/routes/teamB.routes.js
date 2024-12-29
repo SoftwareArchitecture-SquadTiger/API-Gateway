@@ -28,6 +28,11 @@ import {
   updateSubscription,
 } from "../gateway-handlers/B/subscriptionReq.js";
 
+import{
+  loginUser,
+  registerUser,
+} from "../gateway-handlers/B/authReq.js";
+
 const router = express.Router();
 
 //Donor
@@ -61,4 +66,7 @@ router.post("/charity/create", createNewCharity); //POST new charity
 router.put("/charity/update/:id", updateCharityById); //PUT a charity by id
 router.delete("/charity/delete/:id", deleteCharityById); //DELETE a charity by id
 
+//Auth
+router.post("/auth/login", loginUser); //POST a login request
+router.post("/auth/register", registerUser); //POST a register request  
 export default router;
