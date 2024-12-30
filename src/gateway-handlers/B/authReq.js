@@ -7,25 +7,13 @@ import {createNewDonor,getDonorById} from "./donorReq.js";
 // Login User
 export const loginUser = async (req, res) => {
   try {
-    const {userType, username, password } = req.body;
-
+    const {userType, email, password } = req.body;
     const response = await sendKafkaMessageWithResponse("login-request", {
-      action: "LOGIN",
-      data: { username, password },
+      data: {userType, email, password },
     });
-
     // Response should include userdata and JWE
-    const { userId, JWE } = response;
-    switch(userType){
-      case "donor":
-        await getDonorById(response.userId,res);
-        break;
-      case "charity":
-        await getCharityById(response.userId,res);
-        break;
-    }
-    res.json({ requestId, userId, JWE }); // Return the ID in the response
-
+    const {correlationId, userId, JWE } = response;
+    res.json(response); // Return the ID in the response
   } catch (error) {
     handleAxiosErrorResponse(error, res);
   }
@@ -34,26 +22,14 @@ export const loginUser = async (req, res) => {
 // Register User
 export const registerUser = async (req, res) => {
   try {
-    const {userType, username, password, email } = req.body;
+    const { userType, password, email, ...userData } = req.body;
 
-    // Generate a unique ID for the request
-
+    // Prepare the message for the registration service
     const response = await sendKafkaMessageWithResponse("register-request", {
-      action: "REGISTER",
-      data: { username, password, email },
+      data: { userType, password, email, ...userData },
     });
 
-    // Response should include JWE
-    const { JWE } = response;
-    switch(userType){
-      case "donor":
-        await createNewDonor(req,res);
-        break;
-      case "charity":
-        await createNewCharity(req,res);
-        break;
-    }
-    res.json({ requestId, JWE }); // Return the ID in the response
+    res.json(response); // Return the ID in the response
   } catch (error) {
     handleAxiosErrorResponse(error, res);
   }
