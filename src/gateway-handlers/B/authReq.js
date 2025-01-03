@@ -11,8 +11,6 @@ export const loginUser = async (req, res) => {
     const response = await sendKafkaMessageWithResponse("login-request", {
       data: {userType, email, password },
     });
-    // Response should include userdata and JWE
-    const {correlationId, userId, JWE } = response;
     res.json(response); // Return the ID in the response
   } catch (error) {
     handleAxiosErrorResponse(error, res);
