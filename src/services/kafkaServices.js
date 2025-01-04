@@ -9,10 +9,11 @@ import {
 } from "../utils/requestHandler.js";
 
 const BROKER_PORT = process.env.BROKER_PORT;
+const BROKER_IPV4 = process.env.TEAM_B_IPV4 || "localhost";
 
 const kafka = new Kafka({
   clientId: "api-gateway",
-  brokers: [`localhost:${BROKER_PORT}`],
+  brokers: [`${BROKER_IPV4}:${BROKER_PORT}`],
   logLevel: logLevel.INFO,
   logCreator: formatKafkaLog,
 });
