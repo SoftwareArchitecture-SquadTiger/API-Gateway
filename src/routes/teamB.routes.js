@@ -51,7 +51,11 @@ router.put("/subscriptions/update/:email", updateSubscription); //PUT subscripti
 router.delete("/subscriptions/delete/:email", clearSubscription); //DELETE a subscriptions
 
 //Charity
-router.get("/charities", getAllCharities); //GET all charities
+router.get(
+  "/charities",
+  cacheMiddleware(() => CACHE_KEYS.CHARITIES_ALL),
+  getAllCharities
+); //GET all charities
 router.get("/charity/id/:id", getCharityById); //GET charity by id
 router.post("/charity/create", createNewCharity); //POST new charity
 router.put("/charity/update/:id", updateCharityById); //PUT a charity by id
