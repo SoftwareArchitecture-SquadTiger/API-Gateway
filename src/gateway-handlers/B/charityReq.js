@@ -13,9 +13,14 @@ export const getAllCharities = async (req, res) => {
       data: {},
     });
 
-    await redisClient.set(cacheKey, JSON.stringify(response), {
-      EX:3600,
-    });
+    if (redisClient) {
+      await redisClient.set(cacheKey, JSON.stringify(response), {
+        EX: 3600,
+      });
+    } else {
+      console.warn(`Redis is unavailable, skip cache save`)
+    }
+
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -48,7 +53,10 @@ export const createNewCharity = async (req, res) => {
       data: data,
     });
 
-    await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
+    if (redisClient) {
+      await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
+    }
+    
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -65,7 +73,10 @@ export const updateCharityById = async (req, res) => {
       data: { id: id, update: req.body },
     });
 
-    await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
+    if (redisClient) {
+      await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
+    }
+
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -81,8 +92,11 @@ export const deleteCharityById = async (req, res) => {
       action: "DELETE",
       data: { id: id },
     });
+
+    if (redisClient) {
+      await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
+    }
     
-    await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);

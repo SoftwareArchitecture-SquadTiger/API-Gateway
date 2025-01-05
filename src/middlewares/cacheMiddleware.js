@@ -2,6 +2,11 @@ import redisClient from "../services/redisService.js";
 import { logRedisMessage } from "../utils/redisLogHandler.js";
 
 export const cacheMiddleware = (key) => async (req, res, next) => {
+  if (!redisClient) {
+    console.warn(`Redis is unavailable, skipping cache middleware.`)
+    return next();
+  }
+
   const cacheKey = key(req);
 
   try {

@@ -13,9 +13,14 @@ export const getAllDonors = async (req, res) => {
       data: {},
     });
 
-    await redisClient.set(cacheKey, JSON.stringify(response), {
-      EX: 3600,
-    });
+    if (redisClient) {
+      await redisClient.set(cacheKey, JSON.stringify(response), {
+        EX: 3600,
+      });
+    } else {
+      console.warn(`Redis is unavailable, skip cache save`);
+    }
+
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -77,7 +82,10 @@ export const createNewDonor = async (req, res) => {
       data: data,
     });
 
-    await redisClient.del(CACHE_KEYS.DONORS_ALL);
+    if (redisClient) {
+      await redisClient.del(CACHE_KEYS.DONORS_ALL);
+    }
+
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -94,7 +102,10 @@ export const updateDonorById = async (req, res) => {
       data: { id: id, update: req.body },
     });
 
-    await redisClient.del(CACHE_KEYS.DONORS_ALL);
+    if (redisClient) {
+      await redisClient.del(CACHE_KEYS.DONORS_ALL);
+    }
+
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -111,7 +122,10 @@ export const deleteDonorById = async (req, res) => {
       data: { id: id },
     });
 
-    await redisClient.del(CACHE_KEYS.DONORS_ALL);
+    if (redisClient) {
+      await redisClient.del(CACHE_KEYS.DONORS_ALL);
+    }
+
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);

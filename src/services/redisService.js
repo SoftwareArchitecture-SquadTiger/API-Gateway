@@ -1,18 +1,33 @@
-import { createClient } from 'redis';
+import { createClient } from "redis";
 import "dotenv/config";
 
 const REDIS_PORT = process.env.REDIS_PORT;
 const REDIS_HOST = process.env.REDIS_HOST;
 const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
 
-const redisClient = createClient ({
-    url: `redis://default:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}`
-})
+let redisClient;
 
-redisClient.on('error', (err) => {
-    console.error(err)
-});
+try {
+  redisClient = createClient({
+    url: `redis://default:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}`,
+    socket: {
+      reconnectStrategy: (retries) => {
+        if (retries > 0) {
+          console.error("Redis reconnection attempts exceeded.");
+          return false; // Stop trying to reconnect after 1 attempts
+        }
+      },
+    },
+  });
 
-await redisClient.connect();
+  redisClient.on("error", (err) => {
+    console.error("Redis connection error:", err);
+  });
+
+  await redisClient.connect();
+  console.log("Connected to Redis");
+} catch (error) {
+  redisClient = null; // Set Redis client to null if connection fails
+}
 
 export default redisClient;
