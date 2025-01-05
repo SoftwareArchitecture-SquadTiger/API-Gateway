@@ -1,12 +1,20 @@
 import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
 import { sendKafkaMessageWithResponse } from "../../services/kafkaServices.js";
+import redisClient from "../../services/redisService.js";
+import { CACHE_KEYS } from "../../utils/cacheKeys.js";
 
 //Get all donors
 export const getAllDonors = async (req, res) => {
   try {
+    const cacheKey = res.locals.cacheKey;
+
     const response = await sendKafkaMessageWithResponse("donor-request", {
       action: "GET_ALL",
       data: {},
+    });
+
+    await redisClient.set(cacheKey, JSON.stringify(response), {
+      EX: 3600,
     });
     res.json(response);
   } catch (error) {
@@ -69,6 +77,7 @@ export const createNewDonor = async (req, res) => {
       data: data,
     });
 
+    await redisClient.del(CACHE_KEYS.DONORS_ALL);
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -85,6 +94,7 @@ export const updateDonorById = async (req, res) => {
       data: { id: id, update: req.body },
     });
 
+    await redisClient.del(CACHE_KEYS.DONORS_ALL);
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -101,9 +111,9 @@ export const deleteDonorById = async (req, res) => {
       data: { id: id },
     });
 
+    await redisClient.del(CACHE_KEYS.DONORS_ALL);
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
   }
 };
-
