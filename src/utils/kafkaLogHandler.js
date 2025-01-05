@@ -6,7 +6,7 @@ export const logKafkaMessage = (type, topic, correlationId) => {
   console.log(
     `[${timestamp}] ${
       type === "producer" ? "Message Sent" : "Message Received"
-    } | Topic: ${topic} | CorrelationID: ${correlationId}`
+    } | Topic: ${topic} | Correlation ID: ${correlationId}`
   );
 };
 
