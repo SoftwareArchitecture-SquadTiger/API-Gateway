@@ -1,12 +1,20 @@
 import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
 import { sendKafkaMessageWithResponse } from "../../services/kafkaServices.js";
+import redisClient from "../../services/redisService.js";
+import { CACHE_KEYS } from "../../utils/cacheKeys.js";
 
 // Get all charities
 export const getAllCharities = async (req, res) => {
   try {
+    const cacheKey = res.locals.cacheKey;
+
     const response = await sendKafkaMessageWithResponse("charity-request", {
       action: "GET_ALL",
       data: {},
+    });
+
+    await redisClient.set(cacheKey, JSON.stringify(response), {
+      EX:3600,
     });
     res.json(response);
   } catch (error) {
@@ -40,6 +48,7 @@ export const createNewCharity = async (req, res) => {
       data: data,
     });
 
+    await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -56,6 +65,7 @@ export const updateCharityById = async (req, res) => {
       data: { id: id, update: req.body },
     });
 
+    await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -71,7 +81,8 @@ export const deleteCharityById = async (req, res) => {
       action: "DELETE",
       data: { id: id },
     });
-
+    
+    await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
