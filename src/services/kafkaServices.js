@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { Kafka, logLevel } from "kafkajs";
+import { Kafka, logLevel, Partitioners } from "kafkajs";
 import { v4 as uuidv4 } from "uuid";
 import { logKafkaMessage, formatKafkaLog } from "../utils/kafkaLogHandler.js";
 import {
@@ -18,7 +18,7 @@ const kafka = new Kafka({
   logCreator: formatKafkaLog,
 });
 
-const producer = kafka.producer();
+const producer = kafka.producer({ createPartitioner: Partitioners.LegacyPartitioner });
 const consumer = kafka.consumer({
   groupId: "api-gateway",
   sessionTimeout: 10000, //Duration of Kafka waits to detect a dc consumer
