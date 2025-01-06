@@ -40,6 +40,7 @@ const router = express.Router();
 router.get(
   "/donors",
   cacheMiddleware(() => CACHE_KEYS.DONORS_ALL),
+  authMiddleware(['donor','charity']),
   getAllDonors
 ); //GET all donors
 router.get("/donor/id/:id", getDonorById); //GET donor by id
