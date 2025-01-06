@@ -66,7 +66,7 @@ If he cant fix it, just download virtualbox linux and download Docker on it. Goo
 #### Get all charities
 
 ```http
-  GET /charity/all
+  GET /charities
 ```
 
 
