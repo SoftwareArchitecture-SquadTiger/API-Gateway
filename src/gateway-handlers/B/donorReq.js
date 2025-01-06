@@ -70,6 +70,22 @@ export const getDonorsBySubscribedRegions = async (req, res) => {
     handleAxiosErrorResponse(error, res);
   }
 };
+
+//Get filtered donors
+export const getDonorsByFiltered = async (req, res) => {
+  try {
+    const { country } = req.query;
+    const response = await sendKafkaMessageWithResponse("donor-request", {
+      action: "GET_FILTERED",
+      data: { country: country },
+    });
+
+    res.json(response);
+  } catch (error) {
+    handleAxiosErrorResponse(error, res);
+  }
+};
+
 //Create a donor
 export const createNewDonor = async (req, res) => {
   try {
