@@ -1,18 +1,26 @@
-import { jwtVerify, importPKCS8 } from 'jose';
+import { jwtVerify, importSPKI } from 'jose';
 import fs from 'fs';
 
-// Load the RSA private key for decrypting JWS
-const privateKeyPath = process.env.JWS_PRIVATE_KEY_PATH; // Set this in your environment variables
-const privateKeyPem = fs.readFileSync(privateKeyPath, 'utf8');
+// Load the RSA public key for verifying JWS
+const publicKeyPath = process.env.JWS_PUBLIC_KEY_PATH || './default-public-key.pem';
+const publicKeyPem = fs.readFileSync(publicKeyPath, 'utf8');
 
-// Import the private key asynchronously
-const privateKey = await importPKCS8(privateKeyPem, 'RS256');
-
-/**
- * Middleware to decrypt and verify the JWS
- */
-export async function verifySenderIdentity(req, res, next) {
+// Import the public key
+const loadPublicKey = async () => {
   try {
+    return await importSPKI(publicKeyPem, 'RS256');
+  } catch (error) {
+    console.error('Failed to load public key:', error.message);
+    throw new Error('Public key loading failed');
+  }
+};
+
+// Define authMiddleware as a const function
+export const authMiddleware = async (req, res, next) => {
+  try {
+    // Ensure the public key is loaded
+    const publicKey = await loadPublicKey();
+
     // Step 1: Get the JWS from Authorization header
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -21,13 +29,12 @@ export async function verifySenderIdentity(req, res, next) {
 
     const jws = authHeader.split(' ')[1]; // Extract the token
 
-    // Step 2: Verify the JWS using the private key
-    const { payload, protectedHeader } = await jwtVerify(jws, privateKey);
+    // Step 2: Verify the JWS using the public key
+    const { payload } = await jwtVerify(jws, publicKey);
 
-    console.log('Verified JWS:', payload);
-    console.log('Protected Header:', protectedHeader);
+    console.log('Verified JWS Payload:', payload);
 
-    // Step 3: Validate sender identity (e.g., check claims)
+    // Step 3: Validate claims
     if (!payload.userId || !payload.iss || payload.iss !== 'frontend-client') {
       return res.status(403).json({ error: 'Invalid sender identity.' });
     }
@@ -50,4 +57,4 @@ export async function verifySenderIdentity(req, res, next) {
     console.error('Error verifying JWS:', error.message);
     return res.status(401).json({ error: 'Invalid or tampered token.' });
   }
-}
+};

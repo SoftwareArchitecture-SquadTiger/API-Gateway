@@ -1,6 +1,7 @@
 import express from "express";
 import { cacheMiddleware } from "../middlewares/cacheMiddleware.js";
 import { CACHE_KEYS } from "../utils/cacheKeys.js";
+import { authMiddleware } from '../middlewares/authMiddleware.js';
 
 import {
   createNewDonor,
@@ -58,7 +59,7 @@ router.delete("/subscriptions/delete/:email", clearSubscription); //DELETE a sub
 //Charity
 router.get(
   "/charities",
-  cacheMiddleware(() => CACHE_KEYS.CHARITIES_ALL),
+  cacheMiddleware(() => CACHE_KEYS.CHARITIES_ALL),authMiddleware,
   getAllCharities
 ); //GET all charities
 router.get("/charity/id/:id", getCharityById); //GET charity by id

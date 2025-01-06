@@ -1,9 +1,7 @@
 import "dotenv/config";
-import { v4 as uuidv4 } from "uuid"; // Import the UUID library
 import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
 import { sendKafkaMessageWithResponse } from "../../services/kafkaServices.js";
-import {createNewCharity,getCharityById} from "./charityReq.js";
-import {createNewDonor,getDonorById} from "./donorReq.js";
+
 // Login User
 export const loginUser = async (req, res) => {
   try {
