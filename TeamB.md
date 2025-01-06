@@ -51,6 +51,12 @@ If he cant fix it, just download virtualbox linux and download Docker on it. Goo
     docker-compose down -v
 ```
 
+#### If you not use docker 
+
+Comment out  function runKafkaResponseConsumer
+
+![App Screenshot](https://ik.imagekit.io/hoangdat0704/doc.PNG)
+
 
 
 
