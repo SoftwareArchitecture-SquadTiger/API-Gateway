@@ -7,6 +7,7 @@ import {
   deleteDonorById,
   getAllDonors,
   getDonorById,
+  getDonorsByFiltered,
   getDonorsBySubscribedCategories,
   getDonorsBySubscribedRegions,
   updateDonorById,
@@ -39,6 +40,7 @@ router.get(
 router.get("/donor/id/:id", getDonorById); //GET donor by id
 router.get("/donors/subscribe/categories", getDonorsBySubscribedCategories); //GET donors by categories
 router.get("/donors/subscribe/regions", getDonorsBySubscribedRegions); //GET donors by regions
+router.get("/donors/filter", getDonorsByFiltered); //GET donors by filtering
 router.post("/donor/create", createNewDonor); //POST a new donor
 router.put("/donor/update/:id", updateDonorById); //PUT a donor by id
 router.delete("/donor/delete/:id", deleteDonorById); //DELETE a donor by id
