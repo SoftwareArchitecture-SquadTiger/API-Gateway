@@ -17,10 +17,8 @@ export const getAllDonors = async (req, res) => {
       await redisClient.set(cacheKey, JSON.stringify(response), {
         EX: 3600,
       });
-    } else {
-      console.warn(`Redis is unavailable, skip cache save`);
     }
-
+    
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
