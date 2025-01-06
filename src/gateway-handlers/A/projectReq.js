@@ -227,6 +227,7 @@ export const deleteProjectById = async (req, res, next) => {
         const { id } = req.params;
         const response = await axios.delete(`${TEAM_A_BASE_URL}/api/projects/${id}`);
 
+        res.status(response.status).json({ projectResponse: "Project deleted!"})
     }catch(error){
         handleAxiosErrorResponse(error, res);
     }
