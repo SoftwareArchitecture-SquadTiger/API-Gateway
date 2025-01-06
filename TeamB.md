@@ -57,7 +57,7 @@ If he cant fix it, just download virtualbox linux and download Docker on it. Goo
 ## API Reference
 
 ```http
- http:HOST:5001
+ http:HOST:5001/admin-server/
 ```
 
 ### Charity
