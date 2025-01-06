@@ -46,9 +46,19 @@ If he cant fix it, just download virtualbox linux and download Docker on it. Goo
 
 [Install Docker mac ](https://docs.docker.com/desktop/setup/install/mac-install/)
 
+```bash
+    docker-compose up -d --build
+    docker-compose down -v
+```
+
+
 
 
 ## API Reference
+
+```http
+ http:HOST:5001
+```
 
 ### Charity
 
@@ -101,7 +111,7 @@ If he cant fix it, just download virtualbox linux and download Docker on it. Goo
 #### Get all donors 
 
 ```http
-  GET /donor/all
+  GET /donors
 ```
 
 
@@ -109,7 +119,7 @@ If he cant fix it, just download virtualbox linux and download Docker on it. Goo
 #### Get donor by id
 
 ```http
-  GET /donor/:id
+  GET /donor/id/:id
 ```
 
 | Parameter | Type     | Description                       |
@@ -140,3 +150,60 @@ If he cant fix it, just download virtualbox linux and download Docker on it. Goo
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `id`      | `string` | **Required**. Id of item to fetch |
+
+
+#### Get Donors By Subscribed Categories
+
+```http
+   GET /donors/subscribe/categories
+```
+
+#### Get Donors By Regions
+
+```http
+   GET /donors/subscribe/regions
+```
+
+### Subscription
+
+
+
+#### Get Subscription By Email
+
+```http
+   GET /subscriptions/email/:email
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `email`      | `string` | **Required**. Email of item to fetch |
+
+#### Get Email by Categories
+
+```http
+   GET /subscriptions/emails/categories
+```
+
+#### Add Subscription
+
+```http
+  POST /subscriptions/create
+```
+
+#### Update Subscription
+
+```http
+   POST  /subscriptions/update/:email
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `email`      | `string` | **Required**. Email of item to fetch |
+
+
+#### Delete Subscription
+
+```http
+   DELETE  /subscriptions/update/:email
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `email`      | `string` | **Required**. Email of item to fetch |
