@@ -52,8 +52,8 @@
   URL: http://localhost:4000/api/keys/decrypt/model/auth/entity/1111
   Status: Success
 ## Test_Encrypt_Auth_JWE:
-  Method: GET
-  URL: http://localhost:4000/api/keys/decrypt/model/auth/entity/1111
+  Method: POST
+  URL: http://localhost:4000/api/keys/encrypt/model/auth/entity/1111
   Status: Success
 
 

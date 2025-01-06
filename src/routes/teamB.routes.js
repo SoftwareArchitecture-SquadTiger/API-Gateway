@@ -1,6 +1,7 @@
 import express from "express";
 import { cacheMiddleware } from "../middlewares/cacheMiddleware.js";
 import { CACHE_KEYS } from "../utils/cacheKeys.js";
+import { authMiddleware } from '../middlewares/authMiddleware.js';
 
 import {
   createNewDonor,
@@ -28,12 +29,18 @@ import {
   updateSubscription,
 } from "../gateway-handlers/B/subscriptionReq.js";
 
+import{
+  loginUser,
+  registerUser,
+} from "../gateway-handlers/B/authReq.js";
+
 const router = express.Router();
 
 //Donor
 router.get(
   "/donors",
   cacheMiddleware(() => CACHE_KEYS.DONORS_ALL),
+  authMiddleware(['donor','charity']),
   getAllDonors
 ); //GET all donors
 router.get("/donor/id/:id", getDonorById); //GET donor by id
@@ -53,7 +60,7 @@ router.delete("/subscriptions/delete/:email", clearSubscription); //DELETE a sub
 //Charity
 router.get(
   "/charities",
-  cacheMiddleware(() => CACHE_KEYS.CHARITIES_ALL),
+  cacheMiddleware(() => CACHE_KEYS.CHARITIES_ALL),authMiddleware,
   getAllCharities
 ); //GET all charities
 router.get("/charity/id/:id", getCharityById); //GET charity by id
@@ -61,4 +68,7 @@ router.post("/charity/create", createNewCharity); //POST new charity
 router.put("/charity/update/:id", updateCharityById); //PUT a charity by id
 router.delete("/charity/delete/:id", deleteCharityById); //DELETE a charity by id
 
+//Auth
+router.post("/auth/login", loginUser); //POST a login request
+router.post("/auth/register", registerUser); //POST a register request  
 export default router;
