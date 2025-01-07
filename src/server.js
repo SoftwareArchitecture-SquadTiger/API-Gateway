@@ -7,7 +7,7 @@ const HOST = process.env.HOST;
 const responseTopics = ["donor-response", "charity-response"]
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`API Gateway running in http://${HOST}:${PORT}`);
+    console.log(`API Gateway is running on http://${HOST}:${PORT}`);
     console.log(`===============================================`);
 });
 
