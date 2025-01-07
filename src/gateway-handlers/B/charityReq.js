@@ -44,10 +44,15 @@ export const getCharityById = async (req, res) => {
 // Get filtered charities
 export const getFilteredCharities = async (req, res) => {
   try {
+    const cacheKey = res.locals.cacheKey;
     const response = await sendKafkaMessageWithResponse("charity-request", {
       action: "GET_BY_FILTERS",
       data: req.query,
     });
+
+    if (redisClient) {
+      await redisClient.set(cacheKey, JSON.stringify(response), { EX: 3600 });
+    }
 
     res.json(response);
   } catch (error) {
@@ -67,6 +72,8 @@ export const createNewCharity = async (req, res) => {
 
     if (redisClient) {
       await redisClient.del(CACHE_KEYS.CHARITIES_ALL);
+      logKeyInvalidation(1, CACHE_KEYS.CHARITIES_ALL);
+      await invalidateCacheKeys("charities:filtered:*");
     }
 
     res.json(response);
@@ -87,6 +94,8 @@ export const updateCharityById = async (req, res) => {
 
     if (redisClient) {
       await redisClient.del(CACHE_KEYS.CHARITIES_ALL);
+      logKeyInvalidation(1, CACHE_KEYS.CHARITIES_ALL);
+      await invalidateCacheKeys("charities:filtered:*");
     }
 
     res.json(response);
@@ -107,6 +116,8 @@ export const deleteCharityById = async (req, res) => {
 
     if (redisClient) {
       await redisClient.del(CACHE_KEYS.CHARITIES_ALL);
+      logKeyInvalidation(1, CACHE_KEYS.CHARITIES_ALL);
+      await invalidateCacheKeys("charities:filtered:*");
     }
 
     res.json(response);

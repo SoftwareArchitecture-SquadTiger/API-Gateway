@@ -38,14 +38,14 @@ router.get(
   cacheMiddleware(() => CACHE_KEYS.DONORS_ALL),
   getAllDonors
 ); //GET all donors
-router.get("/donor/id/:id", getDonorById); //GET donor by id
-router.get("/donors/subscribe/categories", getDonorsBySubscribedCategories); //GET donors by categories
-router.get("/donors/subscribe/regions", getDonorsBySubscribedRegions); //GET donors by regions
 router.get(
   "/donors/filter",
   cacheMiddleware((req) => generateCacheKey(req)),
   getFilteredDonors
 ); //GET donors by filtering
+router.get("/donor/id/:id", getDonorById); //GET donor by id
+router.get("/donors/subscribe/categories", getDonorsBySubscribedCategories); //GET donors by categories
+router.get("/donors/subscribe/regions", getDonorsBySubscribedRegions); //GET donors by regions
 router.post("/donor/create", createNewDonor); //POST a new donor
 router.put("/donor/update/:id", updateDonorById); //PUT a donor by id
 router.delete("/donor/delete/:id", deleteDonorById); //DELETE a donor by id
@@ -64,7 +64,11 @@ router.get(
   getAllCharities
 ); //GET all charities
 router.get("/charity/id/:id", getCharityById); //GET charity by id
-router.get("/charities/filter", getFilteredCharities); //GET charities with filtering
+router.get(
+  "/charities/filter",
+  cacheMiddleware((req) => generateCacheKey(req)),
+  getFilteredCharities
+); //GET charities with filtering
 router.post("/charity/create", createNewCharity); //POST new charity
 router.put("/charity/update/:id", updateCharityById); //PUT a charity by id
 router.delete("/charity/delete/:id", deleteCharityById); //DELETE a charity by id
