@@ -8,6 +8,7 @@ const responseTopics = ["donor-response", "charity-response"]
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`API Gateway running in http://${HOST}:${PORT}`);
+    console.log(`===============================================`);
 });
 
 runKafkaResponseConsumer(responseTopics).catch((error) => {
