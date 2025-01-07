@@ -41,6 +41,20 @@ export const getCharityById = async (req, res) => {
   }
 };
 
+// Get filtered charities
+export const getCharitiesByFilters = async (req, res) => {
+  try {
+    const response = await sendKafkaMessageWithResponse("charity-request", {
+      action: "GET_BY_FILTERS",
+      data: req.query,
+    });
+
+    res.json(response);
+  } catch (error) {
+    handleAxiosErrorResponse(error, res);
+  }
+};
+
 // Create a charity
 export const createNewCharity = async (req, res) => {
   try {
@@ -52,9 +66,9 @@ export const createNewCharity = async (req, res) => {
     });
 
     if (redisClient) {
-      await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
+      await redisClient.del(CACHE_KEYS.CHARITIES_ALL);
     }
-    
+
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -72,7 +86,7 @@ export const updateCharityById = async (req, res) => {
     });
 
     if (redisClient) {
-      await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
+      await redisClient.del(CACHE_KEYS.CHARITIES_ALL);
     }
 
     res.json(response);
@@ -92,9 +106,9 @@ export const deleteCharityById = async (req, res) => {
     });
 
     if (redisClient) {
-      await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
+      await redisClient.del(CACHE_KEYS.CHARITIES_ALL);
     }
-    
+
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
