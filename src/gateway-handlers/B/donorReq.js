@@ -1,7 +1,7 @@
 import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
 import { sendKafkaMessageWithResponse } from "../../services/kafkaServices.js";
 import redisClient from "../../services/redisService.js";
-import { CACHE_KEYS } from "../../utils/cacheKeys.js";
+import { CACHE_KEYS, invalidateCacheKeys } from "../../utils/cacheKeys.js";
 
 //Get all donors
 export const getAllDonors = async (req, res) => {
@@ -100,6 +100,8 @@ export const createNewDonor = async (req, res) => {
 
     if (redisClient) {
       await redisClient.del(CACHE_KEYS.DONORS_ALL);
+
+      await invalidateCacheKeys('donors:filtered:*')
     }
 
     res.json(response);
@@ -120,6 +122,8 @@ export const updateDonorById = async (req, res) => {
 
     if (redisClient) {
       await redisClient.del(CACHE_KEYS.DONORS_ALL);
+
+      await invalidateCacheKeys('donors:filtered:*')
     }
 
     res.json(response);
@@ -140,6 +144,8 @@ export const deleteDonorById = async (req, res) => {
 
     if (redisClient) {
       await redisClient.del(CACHE_KEYS.DONORS_ALL);
+
+      await invalidateCacheKeys('donors:filtered:*')
     }
 
     res.json(response);
