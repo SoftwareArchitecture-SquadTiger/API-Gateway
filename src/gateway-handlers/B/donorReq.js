@@ -14,11 +14,9 @@ export const getAllDonors = async (req, res) => {
     });
 
     if (redisClient) {
-      await redisClient.set(cacheKey, JSON.stringify(response), {
-        EX: 3600,
-      });
+      await redisClient.set(cacheKey, JSON.stringify(response), { EX: 3600 });
     }
-    
+
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -74,11 +72,15 @@ export const getDonorsBySubscribedRegions = async (req, res) => {
 //Get filtered donors
 export const getDonorsByFiltered = async (req, res) => {
   try {
-    const { country } = req.query;
+    const cacheKey = res.locals.cacheKey;
     const response = await sendKafkaMessageWithResponse("donor-request", {
       action: "GET_FILTERED",
-      data: { country: country },
+      data: req.query,
     });
+
+    if (redisClient) {
+      await redisClient.set(cacheKey, JSON.stringify(response), { EX: 3600 });
+    }
 
     res.json(response);
   } catch (error) {
