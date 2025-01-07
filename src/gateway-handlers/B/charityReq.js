@@ -43,6 +43,25 @@ export const getCharityById = async (req, res) => {
   }
 };
 
+// Get a charity via token
+export const getCharityByToken = async (req, res) => {
+  try {
+
+    const id = req.user.userId;
+
+    // Fetch charity details from Kafka
+    const response = await sendKafkaMessageWithResponse("charity-request", {
+      action: "GET_BY_ID",
+      data: { id: id },
+    });
+
+    // Return response to the client
+    res.json(response);
+  } catch (error) {
+    handleAxiosErrorResponse(error, res); // Ensure this handles Kafka errors appropriately
+  }
+};
+
 // Create a charity
 export const createNewCharity = async (req, res) => {
   try {

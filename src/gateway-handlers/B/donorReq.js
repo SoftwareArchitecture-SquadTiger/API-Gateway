@@ -43,6 +43,23 @@ export const getDonorById = async (req, res) => {
   }
 };
 
+//Get a donor via token
+export const getDonorByToken = async (req, res) => {
+  try {
+    const id = req.user.userId;
+
+    const response = await sendKafkaMessageWithResponse("donor-request", {
+      action: "GET_BY_ID",
+      data: { id: id },
+    });
+
+    res.json(response);
+  }
+  catch (error) {
+    handleAxiosErrorResponse(error, res);
+  } 
+}
+
 //Get donors by categories
 export const getDonorsBySubscribedCategories = async (req, res) => {
   try {

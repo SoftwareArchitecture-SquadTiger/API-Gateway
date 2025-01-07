@@ -8,6 +8,7 @@ import {
   deleteDonorById,
   getAllDonors,
   getDonorById,
+  getDonorByToken,
   getDonorsBySubscribedCategories,
   getDonorsBySubscribedRegions,
   updateDonorById,
@@ -18,6 +19,7 @@ import {
   deleteCharityById,
   getAllCharities,
   getCharityById,
+  getCharityByToken,
   updateCharityById,
 } from "../gateway-handlers/B/charityReq.js";
 
@@ -43,6 +45,7 @@ router.get(
   authMiddleware(['donor','charity']),
   getAllDonors
 ); //GET all donors
+router.get("/donor/id", getDonorByToken); //GET donor by id
 router.get("/donor/id/:id", getDonorById); //GET donor by id
 router.get("/donors/subscribe/categories", getDonorsBySubscribedCategories); //GET donors by categories
 router.get("/donors/subscribe/regions", getDonorsBySubscribedRegions); //GET donors by regions
@@ -63,6 +66,7 @@ router.get(
   cacheMiddleware(() => CACHE_KEYS.CHARITIES_ALL),authMiddleware,
   getAllCharities
 ); //GET all charities
+router.get("/charity/id", getCharityByToken); //GET charity by id
 router.get("/charity/id/:id", getCharityById); //GET charity by id
 router.post("/charity/create", createNewCharity); //POST new charity
 router.put("/charity/update/:id", updateCharityById); //PUT a charity by id
