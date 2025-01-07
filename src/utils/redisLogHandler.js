@@ -12,6 +12,6 @@ export const logCacheOperation = (fetchCache, cacheKey) => {
 
 export const logKeyInvalidation = (amount, pattern) => {
   console.log(
-    `${logHead} Invalidate Keys | Amount: ${amount} | Pattern: ${pattern}`
+    `${logHead} Key Invalidation | Amount: ${amount} | Pattern: ${pattern}`
   );
 };
