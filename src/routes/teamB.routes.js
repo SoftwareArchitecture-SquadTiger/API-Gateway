@@ -7,9 +7,9 @@ import {
   deleteDonorById,
   getAllDonors,
   getDonorById,
-  getDonorsByFiltered,
   getDonorsBySubscribedCategories,
   getDonorsBySubscribedRegions,
+  getFilteredDonors,
   updateDonorById,
 } from "../gateway-handlers/B/donorReq.js";
 
@@ -17,8 +17,8 @@ import {
   createNewCharity,
   deleteCharityById,
   getAllCharities,
-  getCharitiesByFilters,
   getCharityById,
+  getFilteredCharities,
   updateCharityById,
 } from "../gateway-handlers/B/charityReq.js";
 
@@ -44,7 +44,7 @@ router.get("/donors/subscribe/regions", getDonorsBySubscribedRegions); //GET don
 router.get(
   "/donors/filter",
   cacheMiddleware((req) => generateCacheKey(req)),
-  getDonorsByFiltered
+  getFilteredDonors
 ); //GET donors by filtering
 router.post("/donor/create", createNewDonor); //POST a new donor
 router.put("/donor/update/:id", updateDonorById); //PUT a donor by id
@@ -64,7 +64,7 @@ router.get(
   getAllCharities
 ); //GET all charities
 router.get("/charity/id/:id", getCharityById); //GET charity by id
-router.get("/charities/filter", getCharitiesByFilters); //GET charities with filtering
+router.get("/charities/filter", getFilteredCharities); //GET charities with filtering
 router.post("/charity/create", createNewCharity); //POST new charity
 router.put("/charity/update/:id", updateCharityById); //PUT a charity by id
 router.delete("/charity/delete/:id", deleteCharityById); //DELETE a charity by id

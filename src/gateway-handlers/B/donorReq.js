@@ -71,7 +71,7 @@ export const getDonorsBySubscribedRegions = async (req, res) => {
 };
 
 //Get filtered donors
-export const getDonorsByFiltered = async (req, res) => {
+export const getFilteredDonors = async (req, res) => {
   try {
     const cacheKey = res.locals.cacheKey;
     const response = await sendKafkaMessageWithResponse("donor-request", {
