@@ -17,6 +17,7 @@ import {
   createNewCharity,
   deleteCharityById,
   getAllCharities,
+  getCharitiesByFilters,
   getCharityById,
   updateCharityById,
 } from "../gateway-handlers/B/charityReq.js";
@@ -63,6 +64,7 @@ router.get(
   getAllCharities
 ); //GET all charities
 router.get("/charity/id/:id", getCharityById); //GET charity by id
+router.get("/charities/filter", getCharitiesByFilters); //GET charities with filtering
 router.post("/charity/create", createNewCharity); //POST new charity
 router.put("/charity/update/:id", updateCharityById); //PUT a charity by id
 router.delete("/charity/delete/:id", deleteCharityById); //DELETE a charity by id
