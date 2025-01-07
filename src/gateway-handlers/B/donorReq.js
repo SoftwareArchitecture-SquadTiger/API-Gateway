@@ -1,7 +1,7 @@
 import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
 import { sendKafkaMessageWithResponse } from "../../services/kafkaServices.js";
 import redisClient from "../../services/redisService.js";
-import { CACHE_KEYS } from "../../utils/cacheKeys.js";
+import { CACHE_KEYS, invalidateCacheKeys } from "../../utils/cacheKeys.js";
 
 //Get all donors
 export const getAllDonors = async (req, res) => {
@@ -14,11 +14,9 @@ export const getAllDonors = async (req, res) => {
     });
 
     if (redisClient) {
-      await redisClient.set(cacheKey, JSON.stringify(response), {
-        EX: 3600,
-      });
+      await redisClient.set(cacheKey, JSON.stringify(response), { EX: 3600 });
     }
-    
+
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -74,11 +72,15 @@ export const getDonorsBySubscribedRegions = async (req, res) => {
 //Get filtered donors
 export const getDonorsByFiltered = async (req, res) => {
   try {
-    const { country } = req.query;
+    const cacheKey = res.locals.cacheKey;
     const response = await sendKafkaMessageWithResponse("donor-request", {
       action: "GET_FILTERED",
-      data: { country: country },
+      data: req.query,
     });
+
+    if (redisClient) {
+      await redisClient.set(cacheKey, JSON.stringify(response), { EX: 3600 });
+    }
 
     res.json(response);
   } catch (error) {
@@ -98,6 +100,8 @@ export const createNewDonor = async (req, res) => {
 
     if (redisClient) {
       await redisClient.del(CACHE_KEYS.DONORS_ALL);
+
+      await invalidateCacheKeys('donors:filtered:*')
     }
 
     res.json(response);
@@ -118,6 +122,8 @@ export const updateDonorById = async (req, res) => {
 
     if (redisClient) {
       await redisClient.del(CACHE_KEYS.DONORS_ALL);
+
+      await invalidateCacheKeys('donors:filtered:*')
     }
 
     res.json(response);
@@ -138,6 +144,8 @@ export const deleteDonorById = async (req, res) => {
 
     if (redisClient) {
       await redisClient.del(CACHE_KEYS.DONORS_ALL);
+
+      await invalidateCacheKeys('donors:filtered:*')
     }
 
     res.json(response);

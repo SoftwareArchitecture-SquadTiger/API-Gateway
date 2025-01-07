@@ -1,6 +1,6 @@
 import express from "express";
 import { cacheMiddleware } from "../middlewares/cacheMiddleware.js";
-import { CACHE_KEYS } from "../utils/cacheKeys.js";
+import { CACHE_KEYS, generateCacheKey } from "../utils/cacheKeys.js";
 
 import {
   createNewDonor,
@@ -40,7 +40,11 @@ router.get(
 router.get("/donor/id/:id", getDonorById); //GET donor by id
 router.get("/donors/subscribe/categories", getDonorsBySubscribedCategories); //GET donors by categories
 router.get("/donors/subscribe/regions", getDonorsBySubscribedRegions); //GET donors by regions
-router.get("/donors/filter", getDonorsByFiltered); //GET donors by filtering
+router.get(
+  "/donors/filter",
+  cacheMiddleware((req) => generateCacheKey(req)),
+  getDonorsByFiltered
+); //GET donors by filtering
 router.post("/donor/create", createNewDonor); //POST a new donor
 router.put("/donor/update/:id", updateDonorById); //PUT a donor by id
 router.delete("/donor/delete/:id", deleteDonorById); //DELETE a donor by id
