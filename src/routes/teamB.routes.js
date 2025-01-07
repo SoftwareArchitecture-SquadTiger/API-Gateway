@@ -63,7 +63,7 @@ router.delete("/subscriptions/delete/:email", clearSubscription); //DELETE a sub
 //Charity
 router.get(
   "/charities",
-  cacheMiddleware(() => CACHE_KEYS.CHARITIES_ALL),authMiddleware,
+  cacheMiddleware(() => CACHE_KEYS.CHARITIES_ALL),authMiddleware(['donor','charity']),
   getAllCharities
 ); //GET all charities
 router.get("/charity/id", getCharityByToken); //GET charity by id

@@ -1,5 +1,6 @@
 import { jwtVerify, importSPKI } from 'jose';
 import fs from 'fs';
+import cookieParser from 'cookie-parser';
 
 // Load the RSA public key for verifying JWS
 const publicKeyPath = process.env.JWS_PUBLIC_KEY_PATH || './default-public-key.pem';
@@ -17,18 +18,18 @@ const loadPublicKey = async () => {
 
 // Role-based auth middleware
 export const authMiddleware = (allowedRoles = []) => {
+  console.log('cookies Roles:', allowedRoles);
   return async (req, res, next) => {
     try {
       // Ensure the public key is loaded
       const publicKey = await loadPublicKey();
-
-      // Step 1: Get the JWS from Authorization header
-      const authHeader = req.headers['authorization'];
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      // Step 1: Get the JWS from Cookies
+      const jws = req.cookies?.authToken; 
+      console.log('Cookies:', req.cookies);
+      console.log('JWS:', jws);
+      if (!jws) {
         return res.status(401).json({ error: 'Authorization token is missing or invalid.' });
-      }
-
-      const jws = authHeader.split(' ')[1]; // Extract the token
+      } 
 
       // Step 2: Verify the JWS using the public key
       const { payload } = await jwtVerify(jws, publicKey);
@@ -36,7 +37,7 @@ export const authMiddleware = (allowedRoles = []) => {
       console.log('Verified JWS Payload:', payload);
 
       // Step 3: Validate claims
-      if (!payload.userId || !payload.userRole) {
+      if (!payload.userId || !payload.userType) {
         return res.status(403).json({ error: 'Invalid sender identity.' });
       }
 
@@ -45,10 +46,9 @@ export const authMiddleware = (allowedRoles = []) => {
       if (payload.exp && payload.exp < currentTime) {
         return res.status(401).json({ error: 'Token has expired.' });
       }
-            // Step 4: Validate role
 
-      if(payload.userRole==='admin'){}
-      else if (allowedRoles.length > 0 && !allowedRoles.includes(payload.userRole)) {
+
+      if (payload.userType != 'Admin' && allowedRoles.length > 0 && !allowedRoles.includes(payload.userType)) {
         return res.status(403).json({ error: 'Access denied. Insufficient permissions.' });
       }
 
