@@ -42,7 +42,7 @@ export const getCharityById = async (req, res) => {
 };
 
 // Get filtered charities
-export const getCharitiesByFilters = async (req, res) => {
+export const getFilteredCharities = async (req, res) => {
   try {
     const response = await sendKafkaMessageWithResponse("charity-request", {
       action: "GET_BY_FILTERS",
