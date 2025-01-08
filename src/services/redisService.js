@@ -25,7 +25,6 @@ try {
   });
 
   await redisClient.connect();
-  console.log("Connected to Redis");
 } catch (error) {
   redisClient = null; // Set Redis client to null if connection fails
 }
