@@ -21,11 +21,10 @@ try {
   });
 
   redisClient.on("error", (err) => {
-    console.error("Redis connection error:", err);
+    console.error("Can't connect to redis");
   });
 
   await redisClient.connect();
-  console.log("Connected to Redis");
 } catch (error) {
   redisClient = null; // Set Redis client to null if connection fails
 }

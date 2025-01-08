@@ -6,8 +6,6 @@ const HOST = process.env.HOST;
 const PORT_A = process.env.TEAM_A_PORT;
 const TEAM_A_BASE_URL = `http://${HOST}:${PORT_A}`;
 
-
-
 //get
 export const getAllProjects = async (req, res, next) => {
     try {
@@ -28,6 +26,7 @@ export const getProjectById = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);        
     }
 };
+
 export const getProjectByCategory = async (req, res, next) => {
     try {
         const { category } = req.params;
@@ -38,6 +37,7 @@ export const getProjectByCategory = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
 export const getCharityByID = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -48,6 +48,7 @@ export const getCharityByID = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
 export const getProjectByTargetAmountGte = async (req, res, next) => {
     try {
         const { targetAmount } = req.params;
@@ -58,6 +59,7 @@ export const getProjectByTargetAmountGte = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
 export const getProjectByTargetAmountLte = async (req, res, next) => {
     try {
         const { targetAmount } = req.params;
@@ -68,6 +70,7 @@ export const getProjectByTargetAmountLte = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
 export const sortProjectByTargetAmountAsc = async (req, res, next) => {
     try {
         const response = await axios.get(`${TEAM_A_BASE_URL}/api/projects/target-amount/asc`);
@@ -77,6 +80,7 @@ export const sortProjectByTargetAmountAsc = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
 export const sortProjectByTargetAmountDesc = async (req, res, next) => {
     try {
         const response = await axios.get(`${TEAM_A_BASE_URL}/api/projects/target-amount/desc`);
@@ -86,6 +90,7 @@ export const sortProjectByTargetAmountDesc = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
 export const getProjectByCurrentAmountGte = async (req, res, next) => {
     try {
         const { currentAmount } = req.params;
@@ -96,6 +101,7 @@ export const getProjectByCurrentAmountGte = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
 export const getProjectByCurrentAmountLte = async (req, res, next) => {
     try {
         const { currentAmount } = req.params;
@@ -106,6 +112,7 @@ export const getProjectByCurrentAmountLte = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
 export const sortProjectByCurrentAmountAsc = async (req, res, next) => {
     try {
         const response = await axios.get(`${TEAM_A_BASE_URL}/api/projects/current-amount/asc`);
@@ -115,6 +122,7 @@ export const sortProjectByCurrentAmountAsc = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
 export const sortProjectByCurrentAmountDesc = async (req, res, next) => {
     try {
         const response = await axios.get(`${TEAM_A_BASE_URL}/api/projects/current-amount/desc`);
@@ -124,6 +132,7 @@ export const sortProjectByCurrentAmountDesc = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
 export const filterProjectByDate = async (req, res, next) => {
     try {
         const response = await axios.get(`${TEAM_A_BASE_URL}/from/${startDate}/to/${endDate}`);
@@ -132,6 +141,7 @@ export const filterProjectByDate = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
 export const getProjectByCountry = async (req, res, next) => {
     try {
         const { country } = req.params;
@@ -142,6 +152,7 @@ export const getProjectByCountry = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
 export const getProjectByCharityName = async (req, res, next) => { 
     try{
         const { charityName } = req.params;
@@ -151,6 +162,7 @@ export const getProjectByCharityName = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
 export const getProjectByTitle = async (req, res, next) => {
     try {
         const { title } = req.params;
@@ -162,6 +174,7 @@ export const getProjectByTitle = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
 export const getProjectByRegion = async (req, res, next) => {
     try {
         const { region } = req.params;
@@ -200,6 +213,7 @@ export const createNewProject = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 };
+
 export const getProjectByCharityId = async (req, res, next) => { 
     try{
         const { charityId } = req.params;
@@ -221,12 +235,14 @@ export const updateProjectById = async (req, res, next) => {
         handleAxiosErrorResponse(error, res);
     }
 };
+
 //delete
 export const deleteProjectById = async (req, res, next) => {
     try{
         const { id } = req.params;
         const response = await axios.delete(`${TEAM_A_BASE_URL}/api/projects/${id}`);
 
+        res.status(response.status).json({ projectResponse: "Project deleted!"})
     }catch(error){
         handleAxiosErrorResponse(error, res);
     }

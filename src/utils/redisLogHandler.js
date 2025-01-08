@@ -1,11 +1,17 @@
 import { getIndochinaTime } from "./timeFormat.js";
 
-export const logRedisMessage = (fetchCache, cacheKey) => {
-  const timestamp = getIndochinaTime();
+const logHead = `[${getIndochinaTime()}] Redis:`;
 
+export const logCacheOperation = (fetchCache, cacheKey) => {
   console.log(
-    `[${timestamp}] Redis: ${
+    `${logHead} ${
       fetchCache === "fetch" ? "Cache Read" : "Cache Write"
-    } | Key: ${cacheKey} | Status: success` 
+    } | Key: ${cacheKey} | Status: success`
+  );
+};
+
+export const logKeyInvalidation = (amount, pattern) => {
+  console.log(
+    `${logHead} Key Invalidation | Amount: ${amount} | Pattern: ${pattern}`
   );
 };
