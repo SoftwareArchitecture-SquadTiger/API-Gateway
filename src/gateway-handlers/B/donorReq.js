@@ -43,11 +43,16 @@ export const getDonorById = async (req, res) => {
 //Get donors by categories
 export const getDonorsBySubscribedCategories = async (req, res) => {
   try {
+    const cacheKey = res.locals.cacheKey;
     const { categories } = req.body;
     const response = await sendKafkaMessageWithResponse("donor-request", {
       action: "GET_BY_CATEGORIES",
       data: { categories: categories },
     });
+    
+    if (redisClient) {
+      await redisClient.set(cacheKey, JSON.stringify(response), { EX: 3600 });
+    }
 
     res.json(response);
   } catch (error) {
@@ -58,11 +63,16 @@ export const getDonorsBySubscribedCategories = async (req, res) => {
 //Get donors by regions
 export const getDonorsBySubscribedRegions = async (req, res) => {
   try {
+    const cacheKey = res.locals.cacheKey;
     const { regions } = req.body;
     const response = await sendKafkaMessageWithResponse("donor-request", {
       action: "GET_BY_REGIONS",
       data: { regions: regions },
     });
+
+    if (redisClient) {
+      await redisClient.set(cacheKey, JSON.stringify(response), { EX: 3600 });
+    }
 
     res.json(response);
   } catch (error) {
