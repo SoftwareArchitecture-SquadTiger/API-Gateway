@@ -1,13 +1,26 @@
 import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
 import { sendKafkaMessageWithResponse } from "../../services/kafkaServices.js";
+import redisClient from "../../services/redisService.js";
+import { CACHE_KEYS } from "../../utils/cacheKeys.js";
 
 // Get all charities
 export const getAllCharities = async (req, res) => {
   try {
+    const cacheKey = res.locals.cacheKey;
+
     const response = await sendKafkaMessageWithResponse("charity-request", {
       action: "GET_ALL",
       data: {},
     });
+
+    if (redisClient) {
+      await redisClient.set(cacheKey, JSON.stringify(response), {
+        EX: 3600,
+      });
+    } else {
+      console.warn(`Redis is unavailable, skip cache save`)
+    }
+
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -30,6 +43,25 @@ export const getCharityById = async (req, res) => {
   }
 };
 
+// Get a charity via token
+export const getCharityByToken = async (req, res) => {
+  try {
+
+    const id = req.user.userId;
+
+    // Fetch charity details from Kafka
+    const response = await sendKafkaMessageWithResponse("charity-request", {
+      action: "GET_BY_ID",
+      data: { id: id },
+    });
+
+    // Return response to the client
+    res.json(response);
+  } catch (error) {
+    handleAxiosErrorResponse(error, res); // Ensure this handles Kafka errors appropriately
+  }
+};
+
 // Create a charity
 export const createNewCharity = async (req, res) => {
   try {
@@ -40,6 +72,10 @@ export const createNewCharity = async (req, res) => {
       data: data,
     });
 
+    if (redisClient) {
+      await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
+    }
+    
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
@@ -55,6 +91,10 @@ export const updateCharityById = async (req, res) => {
       action: "UPDATE",
       data: { id: id, update: req.body },
     });
+
+    if (redisClient) {
+      await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
+    }
 
     res.json(response);
   } catch (error) {
@@ -72,6 +112,10 @@ export const deleteCharityById = async (req, res) => {
       data: { id: id },
     });
 
+    if (redisClient) {
+      await redisClient.del(CACHE_KEYS.CHARITIES_ALL)
+    }
+    
     res.json(response);
   } catch (error) {
     handleAxiosErrorResponse(error, res);
