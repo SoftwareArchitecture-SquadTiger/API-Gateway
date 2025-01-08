@@ -60,7 +60,11 @@ router.delete("/donor/delete/:id", deleteDonorById); //DELETE a donor by id
 
 //Subscription
 router.get("/subscriptions/email/:email", getSubscriptionsByEmail); //GET regions & categories by email
-router.get("/subscriptions/emails/categories", getEmailsByCategories); //GET donors emails by categories
+router.get(
+  "/subscriptions/emails/categories",
+  cacheMiddleware((req) => generateCacheKey(req, "donors-email")),
+  getEmailsByCategories
+); //GET donors emails by categories
 router.post("/subscriptions/create", createSubscription); //POST a subscription
 router.put("/subscriptions/update/:email", updateSubscription); //PUT subscriptions by email
 router.delete("/subscriptions/delete/:email", clearSubscription); //DELETE a subscriptions
