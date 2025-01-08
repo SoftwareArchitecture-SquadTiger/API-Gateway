@@ -6,12 +6,20 @@ export const CACHE_KEYS = {
   CHARITIES_ALL: "charities:all",
 };
 
-export const generateCacheKey = (req) => {
-  const queryString = Object.entries(req.query)
-    .map(([key, value]) => `${key}:${value}`)
+export const generateCacheKey = (req, prefix = 'default') => {
+  // Determine source of data (query or body)
+  const source = Object.keys(req.query).length > 0 ? req.query : req.body;
+
+  // Convert source to a query string
+  const queryString = Object.entries(source)
+    .map(([key, value]) =>
+      Array.isArray(value)
+        ? `${key}:${value.join(",")}` // Handle elements of req.body array
+        : `${key}:${value}` // Handle filter values of req.query
+    )
     .join("|");
 
-  return `donors:filtered:${queryString}`;
+  return `${prefix}:filtered:${queryString}`;
 };
 
 export const invalidateCacheKeys = async (pattern) => {
