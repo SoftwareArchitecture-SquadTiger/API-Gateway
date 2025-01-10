@@ -23,15 +23,26 @@ import {
   getProjectByCharityName,
   getProjectByTitle,
   getProjectByCharityId,
-  
 } from "../gateway-handlers/A/projectReq.js";
-import { encryptUsingJWE, encryptData  } from "../gateway-handlers/A/encryptionReq.js";
-import { decryptUsingJWE, decryptData } from "../gateway-handlers/A/decryptionReq.js";
-import { generateKeyPair, fetchPublicKey, fetchPrivateKey, updateKeyPair, deleteKeyPair } from "../gateway-handlers/A/keyReq.js";
+import {
+  encryptUsingJWE,
+  encryptData,
+} from "../gateway-handlers/A/encryptionReq.js";
+import {
+  decryptUsingJWE,
+  decryptData,
+} from "../gateway-handlers/A/decryptionReq.js";
+import {
+  generateKeyPair,
+  fetchPublicKey,
+  fetchPrivateKey,
+  updateKeyPair,
+  deleteKeyPair,
+} from "../gateway-handlers/A/keyReq.js";
 
 const router = express.Router();
 //total 21 now just 15
-//Project 
+//Project
 //Get
 router.get("/projects", getAllProjects); //GET all projects(work)
 router.get("/project/:id", getProjectById); //GET a project by id(work)
@@ -44,8 +55,14 @@ router.get("/project/amount/lte/:currentAmount", getProjectByCurrentAmountLte); 
 router.get("/project/amount/gte/:currentAmount", getProjectByCurrentAmountGte); //GET a project by current amount greater than or equal to(work)
 router.get("/project/category/:category", getProjectByCategory); //GET a project by category
 router.get("/project/charity/:id", getCharityByID); //GET a project by charity ID
-router.get("/project/target-amount/gte/:targetAmount", getProjectByTargetAmountGte); //GET a project by target amount greater than or equal to
-router.get("/project/target-amount/lte/:targetAmount", getProjectByTargetAmountLte); //GET a project by target amount less than or equal to
+router.get(
+  "/project/target-amount/gte/:targetAmount",
+  getProjectByTargetAmountGte
+); //GET a project by target amount greater than or equal to
+router.get(
+  "/project/target-amount/lte/:targetAmount",
+  getProjectByTargetAmountLte
+); //GET a project by target amount less than or equal to
 router.get("/project/charity-name/:charityName", getProjectByCharityName); //GET a project by charity name
 router.get("/project/title/:title", getProjectByTitle); //GET a project by title
 router.get("/project/charity-id/:charityId", getProjectByCharityId); //GET a project by charity ID
@@ -63,9 +80,9 @@ router.put("/project/update/:id", updateProjectById); //PUT a project by id (wor
 router.delete("/project/delete/:id", deleteProjectById); //DELETE a project by id
 //Encryption API
 
-router.post("/encrypt", encryptUsingJWE); 
+router.post("/encrypt", encryptUsingJWE);
 //Decryption API
-router.get("/decrypt", decryptUsingJWE); 
+router.get("/decrypt", decryptUsingJWE);
 // Key management routes
 router.post("/keys/model/:model/entity/:entityId", generateKeyPair);
 router.get("/keys/model/:model/entity/:entityId", fetchPublicKey);
