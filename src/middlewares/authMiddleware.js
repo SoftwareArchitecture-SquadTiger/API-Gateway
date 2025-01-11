@@ -1,17 +1,17 @@
-import { jwtVerify, importSPKI } from 'jose';
+import { CompactDecrypt, importPKCS8 } from 'jose';
 import fs from 'fs';
 
-// Load the RSA public key for verifying JWS
-const publicKeyPath = process.env.JWS_PUBLIC_KEY_PATH || './default-public-key.pem';
-const publicKeyPem = fs.readFileSync(publicKeyPath, 'utf8');
+// Load the RSA private key for decrypting JWE
+const privateKeyPath = process.env.JWE_PRIVATE_KEY_PATH || './jwe_private.pem';
+const privateKeyPem = fs.readFileSync(privateKeyPath, 'utf8');
 
-// Import the public key
-const loadPublicKey = async () => {
+// Import the private key
+const loadPrivateKey = async () => {
   try {
-    return await importSPKI(publicKeyPem, 'RS256');
+    return await importPKCS8(privateKeyPem, 'RSA-OAEP');
   } catch (error) {
-    console.error('Failed to load public key:', error.message);
-    throw new Error('Public key loading failed');
+    console.error('Failed to load private key:', error.message);
+    throw new Error('Private key loading failed');
   }
 };
 
@@ -19,21 +19,23 @@ const loadPublicKey = async () => {
 export const authMiddleware = (allowedRoles = []) => {
   return async (req, res, next) => {
     try {
-      // Ensure the public key is loaded
-      const publicKey = await loadPublicKey();
-      // Step 1: Get the JWS from Cookies
-      console.log('req:'  , req);
-      const jws = req.cookies?.authToken; 
+      // Ensure the private key is loaded
+      const privateKey = await loadPrivateKey();
+
+      // Step 1: Get the JWE from Cookies
+      console.log('req:', req);
+      const jwe = req.cookies?.authToken;
       console.log('Cookies:', req.cookies);
-      console.log('JWS:', jws);
-      if (!jws) {
+      console.log('JWE:', jwe);
+      if (!jwe) {
         return res.status(401).json({ error: 'Authorization token is missing or invalid.' });
-      } 
+      }
 
-      // Step 2: Verify the JWS using the public key
-      const { payload } = await jwtVerify(jws, publicKey);
+      // Step 2: Decrypt the JWE using the private key
+      const { plaintext } = await CompactDecrypt(jwe, privateKey);
+      const payload = JSON.parse(new TextDecoder().decode(plaintext));
 
-      console.log('Verified JWS Payload:', payload);
+      console.log('Decrypted JWE Payload:', payload);
 
       // Step 3: Validate claims
       if (!payload.userId || !payload.userType) {
@@ -46,21 +48,25 @@ export const authMiddleware = (allowedRoles = []) => {
         return res.status(401).json({ error: 'Token has expired.' });
       }
 
-
-      if (payload.userType != 'Admin' && allowedRoles.length > 0 && !allowedRoles.includes(payload.userType)) {
+      // Check if the user's role is allowed
+      if (
+        payload.userType !== 'Admin' &&
+        allowedRoles.length > 0 &&
+        !allowedRoles.includes(payload.userType)
+      ) {
         return res.status(403).json({ error: 'Access denied. Insufficient permissions.' });
       }
 
       // Attach user info to the request object for downstream use
       req.user = {
         userId: payload.userId,
-        role: payload.userRole,
+        role: payload.userType,
       };
 
       // Proceed to the next middleware or route handler
       next();
     } catch (error) {
-      console.error('Error verifying JWS:', error.message);
+      console.error('Error decrypting JWE:', error.message);
       return res.status(401).json({ error: 'Invalid or tampered token.' });
     }
   };
