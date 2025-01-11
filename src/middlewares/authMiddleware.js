@@ -1,4 +1,4 @@
-import { CompactDecrypt, importPKCS8 } from 'jose';
+import { compactDecrypt, importPKCS8 } from 'jose';
 import fs from 'fs';
 
 // Load the RSA private key for decrypting JWE
@@ -19,20 +19,18 @@ const loadPrivateKey = async () => {
 export const authMiddleware = (allowedRoles = []) => {
   return async (req, res, next) => {
     try {
-      // Ensure the private key is loaded
       const privateKey = await loadPrivateKey();
 
-      // Step 1: Get the JWE from Cookies
-      console.log('req:', req);
-      const jwe = req.cookies?.authToken;
-      console.log('Cookies:', req.cookies);
-      console.log('JWE:', jwe);
-      if (!jwe) {
+      // Step 1: Get the JWE from Authorization header
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ error: 'Authorization token is missing or invalid.' });
       }
 
+      const jwe = authHeader.split(' ')[1]; // Extract the token from "Bearer <token>"
+
       // Step 2: Decrypt the JWE using the private key
-      const { plaintext } = await CompactDecrypt(jwe, privateKey);
+      const { plaintext } = await compactDecrypt(jwe, privateKey);
       const payload = JSON.parse(new TextDecoder().decode(plaintext));
 
       console.log('Decrypted JWE Payload:', payload);
@@ -42,13 +40,11 @@ export const authMiddleware = (allowedRoles = []) => {
         return res.status(403).json({ error: 'Invalid sender identity.' });
       }
 
-      // Check for token expiration
       const currentTime = Math.floor(Date.now() / 1000);
       if (payload.exp && payload.exp < currentTime) {
         return res.status(401).json({ error: 'Token has expired.' });
       }
 
-      // Check if the user's role is allowed
       if (
         payload.userType !== 'Admin' &&
         allowedRoles.length > 0 &&
@@ -63,7 +59,6 @@ export const authMiddleware = (allowedRoles = []) => {
         role: payload.userType,
       };
 
-      // Proceed to the next middleware or route handler
       next();
     } catch (error) {
       console.error('Error decrypting JWE:', error.message);
