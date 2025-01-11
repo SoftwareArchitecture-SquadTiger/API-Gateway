@@ -37,6 +37,17 @@ import{
   loginUser,
   registerUser,
 } from "../gateway-handlers/B/authReq.js";
+import express from "express";
+import {
+  getTotalDonationsByDay,
+  getTotalDonationsByDonor,
+  getDonorLeaderboard,
+  getTotalDonationForProject,
+  getProjectsCreatedPerMonth,
+  getProjectsByCountry,
+  getProjectsByCategory,
+  getProjectsByMonth,
+} from "../gateway-handlers/statisticsReq.js";
 
 const router = express.Router();
 
@@ -100,4 +111,46 @@ router.delete("/charity/delete/:id", deleteCharityById); //DELETE a charity by i
 //Auth
 router.post("/auth/login", loginUser); //POST a login request
 router.post("/auth/register", registerUser); //POST a register request  
+router.get(
+  "/statistics/donations/by-day",
+  authMiddleware(["Donor","Charity"]),
+  getTotalDonationsByDay
+);
+router.get(
+  "/statistics/donations/by-donor/:donorId",
+  authMiddleware(["Donor","Charity"]),
+  getTotalDonationsByDonor
+);
+router.get(
+  "/statistics/donors/leaderboard",
+  authMiddleware(["Donor","Charity"]),
+  getDonorLeaderboard
+);
+router.get(
+  "/statistics/donations/for-project/:projectId",
+  authMiddleware(["Admin", "Charity"]),
+  getTotalDonationForProject
+);
+
+// Project statistics routes
+router.get(
+  "/statistics/projects/per-month",
+  authMiddleware(["Donor","Charity"]),
+  getProjectsCreatedPerMonth
+);
+router.get(
+  "/statistics/projects/by-country",
+  authMiddleware(["Donor","Charity"]),
+  getProjectsByCountry
+);
+router.get(
+  "/statistics/projects/by-category",
+  authMiddleware(["Donor","Charity"]),
+  getProjectsByCategory
+);
+router.get(
+  "/statistics/projects/by-month",
+  authMiddleware(["Donor","Charity"]),
+  getProjectsByMonth
+);
 export default router;
