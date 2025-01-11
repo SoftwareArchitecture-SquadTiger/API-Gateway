@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import "dotenv/config";
 
 import teamBRoutes from './routes/teamB.routes.js';
 import teamARoutes from './routes/teamA.routes.js';
@@ -8,6 +9,10 @@ import { loggerMiddleware } from "./middlewares/loggerMiddleware.js";
 import cookieParser from "cookie-parser";
 const app = express();
 
+const allowedOrigins = [
+  `http://${process.env.TEAM_A_FRONTEND_HOST}:${process.env.TEAM_A_FRONTEND_PORT}`,
+  `http://${process.env.TEAM_B_FRONTEND_HOST}:${process.env.TEAM_B_FRONTEND_PORT}`,
+];
 //Middleware
 // app.use(cors());
 app.use(cors({

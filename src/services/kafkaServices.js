@@ -9,7 +9,7 @@ import {
 } from "../utils/requestHandler.js";
 
 const BROKER_PORT = process.env.BROKER_PORT;
-const BROKER_IPV4 = process.env.TEAM_B_IPV4 || "localhost";
+const BROKER_IPV4 = process.env.BROKER_HOST;
 
 const kafka = new Kafka({
   clientId: "api-gateway",
