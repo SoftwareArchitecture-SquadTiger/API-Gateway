@@ -6,6 +6,25 @@ const HOST = process.env.HOST;
 const PORT_A = process.env.TEAM_A_PORT;
 const TEAM_A_BASE_URL = `http://${HOST}:${PORT_A}`;
 
+
+export const getAllDonations = async (req, res, next) => {
+    try {
+        // Extract query parameters from the incoming request
+        const queryParams = req.query;
+
+        // Construct the query string from the query parameters
+        const queryString = new URLSearchParams(queryParams).toString();
+
+        // Make the Axios request with the query string
+        const donations = await axios.get(`${TEAM_A_BASE_URL}/api/donations?${queryString}`);
+
+        // Respond with the fetched donations
+        res.status(donations.status).json({ donationResponse: donations.data });
+    } catch (error) {
+        handleAxiosErrorResponse(error, res);
+    }
+};
+
 // Create a new Donation Request
 export const createDonation = async (req, res, next) => {
     try {

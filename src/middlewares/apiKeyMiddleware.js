@@ -5,6 +5,8 @@ export const apiKeyMiddleware = (req, res, next) => {
     const validApiKey = process.env.INTERNAL_API_KEY;
   
     if (!providedApiKey || providedApiKey !== validApiKey) {
+      console.log(`Invalid API key provided: ${providedApiKey}`);
+      console.log(`Valid API key: ${validApiKey}`);
       return res.status(401).json({ error: 'Unauthorized: Invalid API key.',providedApiKey });
     }
   

@@ -1,6 +1,5 @@
 import { jwtVerify, importSPKI } from 'jose';
 import fs from 'fs';
-import cookieParser from 'cookie-parser';
 
 // Load the RSA public key for verifying JWS
 const publicKeyPath = process.env.JWS_PUBLIC_KEY_PATH || './default-public-key.pem';
@@ -18,12 +17,12 @@ const loadPublicKey = async () => {
 
 // Role-based auth middleware
 export const authMiddleware = (allowedRoles = []) => {
-  console.log('cookies Roles:', allowedRoles);
   return async (req, res, next) => {
     try {
       // Ensure the public key is loaded
       const publicKey = await loadPublicKey();
       // Step 1: Get the JWS from Cookies
+      console.log('req:'  , req);
       const jws = req.cookies?.authToken; 
       console.log('Cookies:', req.cookies);
       console.log('JWS:', jws);
