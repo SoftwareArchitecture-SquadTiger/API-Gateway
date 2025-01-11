@@ -43,8 +43,8 @@ const router = express.Router();
 //Donor
 router.get(
   "/donors",
+  authMiddleware(['Charity','Donor']),
   cacheMiddleware(() => CACHE_KEYS.DONORS_ALL),
-  authMiddleware(['donor','charity']),
   getAllDonors
 ); //GET all donors
 router.get("/donor/id", getDonorByToken); //GET donor by id
@@ -82,7 +82,7 @@ router.delete("/subscriptions/delete/:email", clearSubscription); //DELETE a sub
 //Charity
 router.get(
   "/charities",
-  authMiddleware(['charity']),
+  authMiddleware(['Charity','Donor']),
   cacheMiddleware(() => CACHE_KEYS.CHARITIES_ALL),
   getAllCharities
 ); //GET all charities

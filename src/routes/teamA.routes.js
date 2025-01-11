@@ -30,6 +30,8 @@ import { encryptUsingJWE, encryptData  } from "../gateway-handlers/A/encryptionR
 import { decryptUsingJWE, decryptData } from "../gateway-handlers/A/decryptionReq.js";
 import { generateKeyPair, fetchPublicKey, fetchPrivateKey, updateKeyPair, deleteKeyPair } from "../gateway-handlers/A/keyReq.js";
 import { createDonation, getDonationById, getDonationHistoryByDonor, getTotalDonationAmountByDonor, getTotalProjectsParticipatedByDonor, getLeaderboard, handleSubscriptionSuccess, captureDonation, handlePaypalWebhook } from "../gateway-handlers/A/donationReq.js";
+import { capturePayment, initiatePayment } from "../gateway-handlers/A/paymentReq.js";
+import { sendDonationConfirmation,sendProjectCreationConfirmation, sendWelcomeEmailCharity, sendWelcomeEmailDonor } from "../gateway-handlers/A/emailReq.js";
 
 const router = express.Router();
 //total 21 now just 15
@@ -88,5 +90,18 @@ router.get("/donation/total-amount/:donorId", getTotalDonationAmountByDonor); //
 router.get("/donation/total-projects/:donorId", getTotalProjectsParticipatedByDonor); //GET the total number of projects a donor has participated in
 router.get("/donation/leaderboard", getLeaderboard); //GET the leaderboard
 router.get("/donation/capture", captureDonation); //GET the leaderboard
+
+
+// Payment
+router.post("/payment", initiatePayment);
+router.get("/payment/capture", capturePayment);
+router.post("/payment/webhook/paypal", handlePaypalWebhook);
+
+//Email 
+router.post("/email/send-donation-confirmation", sendDonationConfirmation);
+router.post("/email/send-project-creation-confirmation", sendProjectCreationConfirmation);
+router.post("/email/send-welcome-email-donor", sendWelcomeEmailDonor);
+router.post("/email/send-welcome-email-charity", sendWelcomeEmailCharity);
+
 
 export default router;
