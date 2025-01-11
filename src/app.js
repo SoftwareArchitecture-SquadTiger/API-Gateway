@@ -9,7 +9,12 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 //Middleware
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173', // Allow this specific origin
+    credentials: true // If you want to allow cookies or authentication hearsde
+  }));
+  
 app.use(express.json());
 app.use(loggerMiddleware);
 app.use(cookieParser());

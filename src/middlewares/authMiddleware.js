@@ -19,6 +19,7 @@ const loadPublicKey = async () => {
 // Role-based auth middleware
 export const authMiddleware = (allowedRoles = []) => {
   console.log('cookies Roles:', allowedRoles);
+  
   return async (req, res, next) => {
     try {
       // Ensure the public key is loaded
