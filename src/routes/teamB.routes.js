@@ -37,7 +37,7 @@ import{
   loginUser,
   registerUser,
 } from "../gateway-handlers/B/authReq.js";
-import express from "express";
+
 import {
   getTotalDonationsByDay,
   getTotalDonationsByDonor,
@@ -47,7 +47,7 @@ import {
   getProjectsByCountry,
   getProjectsByCategory,
   getProjectsByMonth,
-} from "../gateway-handlers/statisticsReq.js";
+} from "../gateway-handlers/B/statisticsReq.js";
 
 const router = express.Router();
 

@@ -1,5 +1,5 @@
-import { sendKafkaMessageWithResponse } from "../utils/kafka.js"; // Ensure this utility exists
-import { handleAxiosErrorResponse } from "../utils/errorHandler.js";
+import { sendKafkaMessageWithResponse } from "../../services/kafkaServices.js"; // Ensure this utility exists
+import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
 
 // Get total donations by day
 export const getTotalDonationsByDay = async (req, res) => {

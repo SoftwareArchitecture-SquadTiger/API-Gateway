@@ -167,7 +167,7 @@ import {
   getProjectsByCountry,
   getProjectsByCategory,
   getProjectsByMonth,
-} from "../gateway-handlers/statisticsReq.js";
+} from "../gateway-handlers/B/statisticsReq.js";
 
 // Donation statistics routes
 router.get(
