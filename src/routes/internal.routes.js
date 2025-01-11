@@ -5,6 +5,7 @@ import { encryptUsingJWE, encryptData  } from "../gateway-handlers/A/encryptionR
 import { decryptUsingJWE, decryptData } from "../gateway-handlers/A/decryptionReq.js";
 import { generateKeyPair, fetchPublicKey, fetchPrivateKey, updateKeyPair, deleteKeyPair } from "../gateway-handlers/A/keyReq.js";
 import { apiKeyMiddleware } from "../middlewares/apiKeyMiddleware.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 import {
     createNewProject,
     getAllProjects,
