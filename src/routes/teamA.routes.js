@@ -31,6 +31,7 @@ import { decryptUsingJWE, decryptData } from "../gateway-handlers/A/decryptionRe
 import { generateKeyPair, fetchPublicKey, fetchPrivateKey, updateKeyPair, deleteKeyPair } from "../gateway-handlers/A/keyReq.js";
 import { createDonation, getDonationById, getDonationHistoryByDonor, getTotalDonationAmountByDonor, getTotalProjectsParticipatedByDonor, getLeaderboard, handleSubscriptionSuccess, captureDonation, handlePaypalWebhook } from "../gateway-handlers/A/donationReq.js";
 import { capturePayment, initiatePayment } from "../gateway-handlers/A/paymentReq.js";
+import { sendDonationConfirmation,sendProjectCreationConfirmation, sendWelcomeEmailCharity, sendWelcomeEmailDonor } from "../gateway-handlers/A/emailReq.js";
 
 const router = express.Router();
 //total 21 now just 15
@@ -95,6 +96,12 @@ router.get("/donation/capture", captureDonation); //GET the leaderboard
 router.post("/payment", initiatePayment);
 router.get("/payment/capture", capturePayment);
 router.post("/payment/webhook/paypal", handlePaypalWebhook);
+
+//Email 
+router.post("/email/send-donation-confirmation", sendDonationConfirmation);
+router.post("/email/send-project-creation-confirmation", sendProjectCreationConfirmation);
+router.post("/email/send-welcome-email-donor", sendWelcomeEmailDonor);
+router.post("/email/send-welcome-email-charity", sendWelcomeEmailCharity);
 
 
 export default router;

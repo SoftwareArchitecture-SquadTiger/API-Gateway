@@ -86,4 +86,3 @@ export const capturePayment = async (req, res, next) => {
             handleAxiosErrorResponse(error, res);
         }
     };
-    
