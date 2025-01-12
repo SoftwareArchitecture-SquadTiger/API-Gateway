@@ -40,6 +40,7 @@ import{
 
 import {
   getTotalDonationsByDay,
+  getTotalDonationsByMonth,
   getTotalDonationsByDonor,
   getDonorLeaderboard,
   getTotalDonationForProject,
@@ -120,6 +121,11 @@ router.get(
   getTotalDonationsByDay
 );
 router.get(
+  "/statistics/donations/by-month",
+  authMiddleware(["Donor","Charity"]),
+  getTotalDonationsByMonth
+)
+router.get(
   "/statistics/donations/by-donor/:donorId",
   authMiddleware(["Donor","Charity"]),
   getTotalDonationsByDonor
@@ -151,4 +157,5 @@ router.get(
   authMiddleware(["Donor","Charity"]),
   getProjectsByMonth
 );
+
 export default router;

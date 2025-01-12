@@ -64,6 +64,7 @@ import{
 } from "../gateway-handlers/B/authReq.js";
 import {
   getTotalDonationsByDay,
+  getTotalDonationsByMonth,
   getTotalDonationsByDonor,
   getDonorLeaderboard,
   getTotalDonationForProject,
@@ -174,6 +175,10 @@ router.get(
   "/statistics/donations/by-day",
   getTotalDonationsByDay
 );
+router.get(
+  "/statistics/donations/by-month",
+  getTotalDonationsByMonth
+)
 router.get(
   "/statistics/donations/by-donor/:donorId",
   getTotalDonationsByDonor
