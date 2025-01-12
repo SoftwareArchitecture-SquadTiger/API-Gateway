@@ -16,7 +16,18 @@ export const getTotalDonationsByDay = async (req, res) => {
     handleAxiosErrorResponse(error, res);
   }
 };
-
+export const getTotalDonationsByMonth = async (req, res) => {
+  try {
+    const { startMonth, endMonth } = req.query;
+    const response = await sendKafkaMessageWithResponse("statistics-request", {
+      action: "GET_TOTAL_DONATIONS_BY_MONTH",
+      data: { startMonth, endMonth },
+    });
+    res.json(response);
+  } catch (error) {
+    handleAxiosErrorResponse(error, res);
+  }
+}
 // Get total donations by donor
 export const getTotalDonationsByDonor = async (req, res) => {
   try {
@@ -54,19 +65,6 @@ export const getTotalDonationForProject = async (req, res) => {
     const response = await sendKafkaMessageWithResponse("statistics-request", {
       action: "GET_TOTAL_DONATION_FOR_PROJECT",
       data: { projectId },
-    });
-
-    res.json(response);
-  } catch (error) {
-    handleAxiosErrorResponse(error, res);
-  }
-};
-
-// Get projects created per month
-export const getProjectsCreatedPerMonth = async (req, res) => {
-  try {
-    const response = await sendKafkaMessageWithResponse("statistics-request", {
-      action: "GET_PROJECTS_CREATED_PER_MONTH",
     });
 
     res.json(response);

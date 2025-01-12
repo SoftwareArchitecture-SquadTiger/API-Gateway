@@ -64,10 +64,10 @@ import{
 } from "../gateway-handlers/B/authReq.js";
 import {
   getTotalDonationsByDay,
+  getTotalDonationsByMonth,
   getTotalDonationsByDonor,
   getDonorLeaderboard,
   getTotalDonationForProject,
-  getProjectsCreatedPerMonth,
   getProjectsByCountry,
   getProjectsByCategory,
   getProjectsByMonth,
@@ -111,10 +111,6 @@ router.delete("/charity/delete/:id", deleteCharityById); //DELETE a charity by i
 router.post("/auth/login", loginUser); //POST a login request
 router.post("/auth/register", registerUser); //POST a register request  
 
-
-
-
-//total 21 now just 15
 //Project 
 //Get
 router.get("/projects", getAllProjects); //GET all projects(work)
@@ -176,6 +172,10 @@ router.get(
   getTotalDonationsByDay
 );
 router.get(
+  "/statistics/donations/by-month",
+  getTotalDonationsByMonth
+)
+router.get(
   "/statistics/donations/by-donor/:donorId",
   getTotalDonationsByDonor
 );
@@ -189,10 +189,6 @@ router.get(
 );
 
 // Project statistics routes
-router.get(
-  "/statistics/projects/per-month",
-  getProjectsCreatedPerMonth
-);
 router.get(
   "/statistics/projects/by-country",
   getProjectsByCountry

@@ -96,7 +96,6 @@ router.get("/donation/total-projects/:donorId",authMiddleware(['Donor']), getTot
 router.get("/donation/leaderboard",authMiddleware(["Donor", "Charity"]), getLeaderboard); //GET the leaderboard
 router.get("/donation/capture",authMiddleware(["Admin", "Charity"]), captureDonation); //Capture paypal order
 
-
 // Payment
 router.post("/payment", initiatePayment);
 router.get("/payment/capture", capturePayment);
