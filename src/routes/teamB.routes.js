@@ -141,7 +141,6 @@ router.get(
   getTotalDonationForProject
 );
 
-
 router.get(
   "/statistics/projects/by-country",
   authMiddleware(["Donor","Charity"]),
