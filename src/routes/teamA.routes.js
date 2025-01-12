@@ -38,7 +38,7 @@ const router = express.Router();
 //Get
 router.get("/projects", getAllProjects); //GET all projects(work)
 router.get("/project/:id", getProjectById); //GET a project by id(work)
-router.get("/project/status/:status",authMiddleware, getProjectByStatus); //GET a project by status(work)
+router.get("/project/status/:status", getProjectByStatus); //GET a project by status(work)
 router.get("/project/amount/lte/:currentAmount", getProjectByCurrentAmountLte); //GET a project by current amount less than or equal to(work)
 router.get("/project/region/:region", getProjectByRegion); //GET a project by region(work)
 router.get("/project/country/:country", getProjectByCountry); //GET all projects sorted by target amount ascending(work)
@@ -65,11 +65,11 @@ router.get("/project/current-amount/desc", sortProjectByCurrentAmountDesc); //GE
 router.get("/project/target-amount/asc", sortProjectByTargetAmountAsc); //GET all projects sorted by target amount ascending(work)
 router.get("/project/target-amount/desc", sortProjectByTargetAmountDesc); //GET all projects sorted by target amount descending(work)
 //Post
-router.post("/project/create", createNewProject); //POST a project(work)
+router.post("/project/create",authMiddleware(['Charity']), createNewProject); //POST a project(work)
 //Put
-router.put("/project/update/:id", updateProjectById); //PUT a project by id (work)
+router.put("/project/update/:id",authMiddleware(['Charity']), updateProjectById); //PUT a project by id (work)
 //Delete
-router.delete("/project/delete/:id", deleteProjectById); //DELETE a project by id
+router.delete("/project/delete/:id",authMiddleware(['Charity']), deleteProjectById); //DELETE a project by id
 //Encryption API
 
 router.post("/encrypt", encryptUsingJWE);
@@ -88,13 +88,13 @@ router.post("/keys/decrypt/model/:model/entity/:entityId", decryptData);
 router.post("/donation/create", createDonation); //POST a donation
 router.post("/donation/webhook/paypal", handlePaypalWebhook); //POST a donation
 
-router.get("/donation/subscription/success", handleSubscriptionSuccess); //GET a donation
+router.get("/donation/subscription/success", handleSubscriptionSuccess); //Handle successful monthly payment
 router.get("/donation/:id", getDonationById); //GET a donation by id
-router.get("/donation/history/:donorId", getDonationHistoryByDonor); //GET donation history for a specific donor
-router.get("/donation/total-amount/:donorId", getTotalDonationAmountByDonor); //GET the total donation amount for a specific donor
-router.get("/donation/total-projects/:donorId", getTotalProjectsParticipatedByDonor); //GET the total number of projects a donor has participated in
-router.get("/donation/leaderboard", getLeaderboard); //GET the leaderboard
-router.get("/donation/capture", captureDonation); //GET the leaderboard
+router.get("/donation/history/:donorId",authMiddleware(['Donor']), getDonationHistoryByDonor); //GET donation history for a specific donor
+router.get("/donation/total-amount/:donorId",authMiddleware(['Donor']), getTotalDonationAmountByDonor); //GET the total donation amount for a specific donor
+router.get("/donation/total-projects/:donorId",authMiddleware(['Donor']), getTotalProjectsParticipatedByDonor); //GET the total number of projects a donor has participated in
+router.get("/donation/leaderboard",authMiddleware(["Donor", "Charity"]), getLeaderboard); //GET the leaderboard
+router.get("/donation/capture",authMiddleware(["Admin", "Charity"]), captureDonation); //Capture paypal order
 
 
 // Payment
