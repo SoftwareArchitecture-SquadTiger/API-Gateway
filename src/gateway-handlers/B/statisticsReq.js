@@ -62,19 +62,6 @@ export const getTotalDonationForProject = async (req, res) => {
   }
 };
 
-// Get projects created per month
-export const getProjectsCreatedPerMonth = async (req, res) => {
-  try {
-    const response = await sendKafkaMessageWithResponse("statistics-request", {
-      action: "GET_PROJECTS_CREATED_PER_MONTH",
-    });
-
-    res.json(response);
-  } catch (error) {
-    handleAxiosErrorResponse(error, res);
-  }
-};
-
 // Get projects by country
 export const getProjectsByCountry = async (req, res) => {
   try {

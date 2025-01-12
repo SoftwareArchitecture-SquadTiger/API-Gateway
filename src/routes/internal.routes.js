@@ -67,7 +67,6 @@ import {
   getTotalDonationsByDonor,
   getDonorLeaderboard,
   getTotalDonationForProject,
-  getProjectsCreatedPerMonth,
   getProjectsByCountry,
   getProjectsByCategory,
   getProjectsByMonth,
@@ -189,10 +188,7 @@ router.get(
 );
 
 // Project statistics routes
-router.get(
-  "/statistics/projects/per-month",
-  getProjectsCreatedPerMonth
-);
+
 router.get(
   "/statistics/projects/by-country",
   getProjectsByCountry
