@@ -6,7 +6,7 @@ export const getTotalDonationsByDay = async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
-    const response = await sendKafkaMessageWithResponse("donation-statistics", {
+    const response = await sendKafkaMessageWithResponse("statistics-request", {
       action: "GET_TOTAL_DONATIONS_BY_DAY",
       data: { startDate, endDate },
     });
@@ -22,7 +22,7 @@ export const getTotalDonationsByDonor = async (req, res) => {
   try {
     const { donorId } = req.params;
 
-    const response = await sendKafkaMessageWithResponse("donation-statistics", {
+    const response = await sendKafkaMessageWithResponse("statistics-request", {
       action: "GET_TOTAL_DONATIONS_BY_DONOR",
       data: { donorId },
     });
@@ -36,7 +36,7 @@ export const getTotalDonationsByDonor = async (req, res) => {
 // Get donor leaderboard
 export const getDonorLeaderboard = async (req, res) => {
   try {
-    const response = await sendKafkaMessageWithResponse("donation-statistics", {
+    const response = await sendKafkaMessageWithResponse("statistics-request", {
       action: "GET_DONOR_LEADERBOARD",
     });
 
@@ -51,7 +51,7 @@ export const getTotalDonationForProject = async (req, res) => {
   try {
     const { projectId } = req.params;
 
-    const response = await sendKafkaMessageWithResponse("project-statistics", {
+    const response = await sendKafkaMessageWithResponse("statistics-request", {
       action: "GET_TOTAL_DONATION_FOR_PROJECT",
       data: { projectId },
     });
@@ -65,7 +65,7 @@ export const getTotalDonationForProject = async (req, res) => {
 // Get projects created per month
 export const getProjectsCreatedPerMonth = async (req, res) => {
   try {
-    const response = await sendKafkaMessageWithResponse("project-statistics", {
+    const response = await sendKafkaMessageWithResponse("statistics-request", {
       action: "GET_PROJECTS_CREATED_PER_MONTH",
     });
 
@@ -78,7 +78,7 @@ export const getProjectsCreatedPerMonth = async (req, res) => {
 // Get projects by country
 export const getProjectsByCountry = async (req, res) => {
   try {
-    const response = await sendKafkaMessageWithResponse("project-statistics", {
+    const response = await sendKafkaMessageWithResponse("statistics-request", {
       action: "GET_PROJECTS_BY_COUNTRY",
     });
 
@@ -91,7 +91,7 @@ export const getProjectsByCountry = async (req, res) => {
 // Get projects by category
 export const getProjectsByCategory = async (req, res) => {
   try {
-    const response = await sendKafkaMessageWithResponse("project-statistics", {
+    const response = await sendKafkaMessageWithResponse("statistics-request", {
       action: "GET_PROJECTS_BY_CATEGORY",
     });
 
@@ -106,7 +106,7 @@ export const getProjectsByMonth = async (req, res) => {
   try {
     const { startMonth, endMonth } = req.query;
 
-    const response = await sendKafkaMessageWithResponse("project-statistics", {
+    const response = await sendKafkaMessageWithResponse("statistics-request", {
       action: "GET_PROJECTS_BY_MONTH",
       data: { startMonth, endMonth },
     });

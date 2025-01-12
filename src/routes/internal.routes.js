@@ -62,6 +62,16 @@ import{
   loginUser,
   registerUser,
 } from "../gateway-handlers/B/authReq.js";
+import {
+  getTotalDonationsByDay,
+  getTotalDonationsByDonor,
+  getDonorLeaderboard,
+  getTotalDonationForProject,
+  getProjectsCreatedPerMonth,
+  getProjectsByCountry,
+  getProjectsByCategory,
+  getProjectsByMonth,
+} from "../gateway-handlers/B/statisticsReq.js";
 
 const router = express.Router();
 router.use(apiKeyMiddleware);
@@ -159,58 +169,40 @@ router.get("/donation/total-amount/:donorId", getTotalDonationAmountByDonor); //
 router.get("/donation/total-projects/:donorId", getTotalProjectsParticipatedByDonor); //GET the total number of projects a donor has participated in
 router.get("/donation/leaderboard", getLeaderboard); //GET the leaderboard
 router.get("/donation/capture", captureDonation); //GET the leaderboard
-import {
-  getTotalDonationsByDay,
-  getTotalDonationsByDonor,
-  getDonorLeaderboard,
-  getTotalDonationForProject,
-  getProjectsCreatedPerMonth,
-  getProjectsByCountry,
-  getProjectsByCategory,
-  getProjectsByMonth,
-} from "../gateway-handlers/B/statisticsReq.js";
 
 // Donation statistics routes
 router.get(
   "/statistics/donations/by-day",
-  authMiddleware(["Admin", "Donor"]),
   getTotalDonationsByDay
 );
 router.get(
   "/statistics/donations/by-donor/:donorId",
-  authMiddleware(["Admin", "Donor"]),
   getTotalDonationsByDonor
 );
 router.get(
   "/statistics/donors/leaderboard",
-  authMiddleware(["Admin"]),
   getDonorLeaderboard
 );
 router.get(
   "/statistics/donations/for-project/:projectId",
-  authMiddleware(["Admin", "Charity"]),
   getTotalDonationForProject
 );
 
 // Project statistics routes
 router.get(
   "/statistics/projects/per-month",
-  authMiddleware(["Admin"]),
   getProjectsCreatedPerMonth
 );
 router.get(
   "/statistics/projects/by-country",
-  authMiddleware(["Admin"]),
   getProjectsByCountry
 );
 router.get(
   "/statistics/projects/by-category",
-  authMiddleware(["Admin"]),
   getProjectsByCategory
 );
 router.get(
   "/statistics/projects/by-month",
-  authMiddleware(["Admin"]),
   getProjectsByMonth
 );
 
