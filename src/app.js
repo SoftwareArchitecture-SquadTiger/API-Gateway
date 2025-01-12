@@ -9,17 +9,8 @@ import { loggerMiddleware } from "./middlewares/loggerMiddleware.js";
 import cookieParser from "cookie-parser";
 const app = express();
 
-const allowedOrigins = [
-  `http://${process.env.TEAM_A_FRONTEND_HOST}:${process.env.TEAM_A_FRONTEND_PORT}`,
-  `http://${process.env.TEAM_B_FRONTEND_HOST}:${process.env.TEAM_B_FRONTEND_PORT}`,
-];
-//Middleware
-// app.use(cors());
-app.use(cors({
-    origin: 'http://localhost:5173', // Allow this specific origin
-    credentials: true // If you want to allow cookies or authentication hearsde
-  }));
-  
+// Middleware
+app.use(cors());
 app.use(express.json());
 app.use(loggerMiddleware);
 app.use(cookieParser());
