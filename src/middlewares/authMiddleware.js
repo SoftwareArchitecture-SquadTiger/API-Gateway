@@ -20,7 +20,7 @@ export const authMiddleware = (allowedRoles = []) => {
   return async (req, res, next) => {
     try {
       const privateKey = await loadPrivateKey();
-
+      console.log(privateKey);
       // Step 1: Get the JWE from Authorization header
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
