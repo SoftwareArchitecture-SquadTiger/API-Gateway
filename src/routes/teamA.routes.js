@@ -28,7 +28,7 @@ import {
 import { encryptUsingJWE, encryptData  } from "../gateway-handlers/A/encryptionReq.js";
 import { decryptUsingJWE, decryptData } from "../gateway-handlers/A/decryptionReq.js";
 import { generateKeyPair, fetchPublicKey, fetchPrivateKey, updateKeyPair, deleteKeyPair } from "../gateway-handlers/A/keyReq.js";
-import { createDonation, getDonationById, getDonationHistoryByDonor, getTotalDonationAmountByDonor, getTotalProjectsParticipatedByDonor, getLeaderboard, handleSubscriptionSuccess, captureDonation, handlePaypalWebhook, getDonationAmountByCharityId, getProjectCountByCharityId, getDonationsByCharityId } from "../gateway-handlers/A/donationReq.js";
+import { createDonation, getDonationById, getDonationHistoryByDonor, getTotalDonationAmountByDonor, getTotalProjectsParticipatedByDonor, getLeaderboard, handleSubscriptionSuccess, captureDonation, handlePaypalWebhook, getDonationAmountByCharityId, getProjectCountByCharityId, getDonationsByCharityId, getAllDonations} from "../gateway-handlers/A/donationReq.js";
 import { capturePayment, initiatePayment } from "../gateway-handlers/A/paymentReq.js";
 import { sendDonationConfirmation,sendProjectCreationConfirmation, sendWelcomeEmailCharity, sendWelcomeEmailDonor } from "../gateway-handlers/A/emailReq.js";
 
@@ -96,7 +96,7 @@ router.get("/donation/total-projects/:donorId",authMiddleware(['Donor']), getTot
 router.get("/donation/leaderboard",authMiddleware(["Donor", "Charity"]), getLeaderboard); //GET the leaderboard
 router.get("/donation/capture",authMiddleware(["Admin", "Charity"]), captureDonation); //Capture paypal order
 
-
+router.get("/donation", getAllDonations);
 router.get("/donation/total-donations/charity/:charityId", getDonationAmountByCharityId); //GET total donations for a project
 router.get("/donation/total-projects/charity/:charityId", getProjectCountByCharityId); //GET total projects for a charity
 router.get("/donation/donation-list/charity/:charityId", getDonationsByCharityId); //GET all
