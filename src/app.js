@@ -9,12 +9,12 @@ import { loggerMiddleware } from "./middlewares/loggerMiddleware.js";
 import cookieParser from "cookie-parser";
 const app = express();
 const HOST = process.env.HOST;
-const TEAMAPORT = process.env.TEAM_A_PORT;
-const TEAMBPORT = process.env.TEAM_B_PORT;
+const TEAMAPORT = process.env.TEAM_A_FRONTEND_PORT;
+const TEAMBPORT = process.env.TEAM_B_FRONTEND_PORT;
 // Middleware
 const allowedOrigins = [
-  `${HOST}:${TEAMAPORT}`,
-  `${HOST}:${TEAMBPORT}`, // Add more allowed origins here
+  `http://${HOST}:${TEAMAPORT}`,
+  `http://${HOST}:${TEAMBPORT}`, // Add more allowed origins here
 ];
 
 app.use(
