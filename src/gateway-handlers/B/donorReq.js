@@ -19,6 +19,7 @@ export const getAllDonors = async (req, res) => {
     }
 
     res.json(response);
+    console.log("Donors retrieved");
   } catch (error) {
     handleAxiosErrorResponse(error, res);
   }
