@@ -64,5 +64,6 @@ export const logoutUser = async (req, res) => {
 };
 
 export const validateToken = async (req, res) => {
-  res.status(200).json({ message: 'Authenticated', user: decoded });
+  const userRole = req.user.role;
+  res.status(200).json({ message: 'Authenticated', user: userRole });
 };
