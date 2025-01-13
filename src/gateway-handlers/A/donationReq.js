@@ -124,3 +124,14 @@ export const getLeaderboard = async (req, res) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
+export const getDonationAmountByCharityId = async (req, res, next) => {
+    try {
+      const { charityId } = req.params;
+      const { month, year } = req.query;
+      const donation = await axios.get(`${TEAM_A_BASE_URL}/api/donations/charity/total-donations/${charityId}?month=${month}&year=${year}`);
+      res.status(donation.status).json({ donationResponse: donation.data });
+    } catch (error) {
+      handleAxiosErrorResponse(error, res);
+    }
+  };
