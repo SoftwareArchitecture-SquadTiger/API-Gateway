@@ -111,10 +111,6 @@ router.delete("/charity/delete/:id", deleteCharityById); //DELETE a charity by i
 router.post("/auth/login", loginUser); //POST a login request
 router.post("/auth/register", registerUser); //POST a register request  
 
-
-
-
-//total 21 now just 15
 //Project 
 //Get
 router.get("/projects", getAllProjects); //GET all projects(work)
@@ -193,7 +189,6 @@ router.get(
 );
 
 // Project statistics routes
-
 router.get(
   "/statistics/projects/by-country",
   getProjectsByCountry
