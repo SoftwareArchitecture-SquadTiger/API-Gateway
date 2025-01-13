@@ -119,7 +119,7 @@ router.delete("/charity/delete/:id",authMiddleware(['Charity']), deleteCharityBy
 router.post("/auth/login", loginUser); //POST a login request
 router.post("/auth/register", registerUser); //POST a register request  
 router.post("/auth/logout", logoutUser);
-router.get("/auth/validate-token",validateToken); 
+router.get("/auth/validate-token", authMiddleware(['Charity','Donor']), validateToken); 
 router.get(
   "/statistics/donations/by-day",
   authMiddleware(["Donor","Charity"]),
