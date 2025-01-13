@@ -1,6 +1,6 @@
 import { compactDecrypt, importPKCS8 } from 'jose';
 import fs from 'fs';
-
+import express from 'express';
 // Load the RSA private key for decrypting JWE
 const privateKeyPath = process.env.JWE_PRIVATE_KEY_PATH || './jwe_private.pem';
 const privateKeyPem = fs.readFileSync(privateKeyPath, 'utf8');
@@ -21,27 +21,27 @@ export const authMiddleware = (allowedRoles = []) => {
     try {
       const privateKey = await loadPrivateKey();
       console.log(privateKey);
-      // Step 1: Get the JWE from Authorization header
-      const authHeader = req.headers.authorization;
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.log(req.cookies);  // Check if the cookie is present
+      // Step 1: Get the JWE token from the cookie
+      const jwe = req.cookies?.authToken; // Assuming the token is stored in the 'authToken' cookie
+      console.log(jwe);
+      if (!jwe) {
+        console.log('Authorization token is missing or invalid.');
         return res.status(401).json({ error: 'Authorization token is missing or invalid.' });
       }
-
-      const jwe = authHeader.split(' ')[1]; // Extract the token from "Bearer <token>"
-
       // Step 2: Decrypt the JWE using the private key
       const { plaintext } = await compactDecrypt(jwe, privateKey);
       const payload = JSON.parse(new TextDecoder().decode(plaintext));
-
       console.log('Decrypted JWE Payload:', payload);
-
       // Step 3: Validate claims
       if (!payload.userId || !payload.userType) {
+        console.log('Invalid payload:', payload);
         return res.status(403).json({ error: 'Invalid sender identity.' });
       }
 
       const currentTime = Math.floor(Date.now() / 1000);
       if (payload.exp && payload.exp < currentTime) {
+        console.log('Token has expired:', payload.exp, currentTime);
         return res.status(401).json({ error: 'Token has expired.' });
       }
 
