@@ -25,28 +25,29 @@ Before running the API Gateway, ensure that the following dependencies are set u
    npm install
 4. Make sure the .env file is on the same level as the package.json and has the neccessary credentials
    ```bash
-    #HOSTS
-    HOST=<Current device IPv4 address>
-    BROKER_HOST=<Kafka container IPv4 address>
-    TEAM_A_FRONTEND_HOST=<Team A frontend IPv4 address>
-    TEAM_B_FRONTEND_HOST=<Team B frontend IPv4 address>
+   #HOSTS
+   HOST=<IPv4>
+   BROKER_HOST=<Kafka IPv4>
+   TEAM_A_FRONTEND_HOST=<Team A frontend IPv4>
+   TEAM_B_FRONTEND_HOST=<Team B frontend IPv4>
 
-    #PORTS
-    PORT=5001
-    TEAM_A_FRONTEND_PORT=3000
-    TEAM_B_FRONTEND_PORT=7000
-    TEAM_A_PORT=4000
-    TEAM_B_PORT=6000
-    BROKER_PORT=9093
+   #PORTS
+   PORT=5001
+   TEAM_A_FRONTEND_PORT=3000
+   TEAM_B_FRONTEND_PORT=5173
+   TEAM_A_PORT=4000
+   TEAM_B_PORT=6000
+   BROKER_PORT=9093
 
-    #Redis Config
-    REDIS_PORT=6379
-    REDIS_HOST=<Redis container IPv4 address>
-    REDIS_PASSWORD=iamAdmin
+   #Redis Config
+   REDIS_PORT=6379
+   REDIS_HOST=<Team B redis host IPv4>
+   REDIS_PASSWORD=iamAdmin
 
-    #Auth
-    JWS_PUBLIC_KEY_PATH=src\secret\jws_public.pem
-    INTERNAL_API_KEY=291zhI0AhUzU99YJ3CrkqatoPtb_8tY42VpD4y9CcuHNsizecGlQZylwoicQhiYSUHczM93Zk-mJl_yyI17RlQ
+   #Auth
+   JWS_PUBLIC_KEY_PATH=src\secret\jws_public.pem
+   JWE_PRIVATE_KEY_PATH=src\secret\jwe_private.pem
+   INTERNAL_API_KEY=291zhI0AhUzU99YJ3CrkqatoPtb_8tY42VpD4y9CcuHNsizecGlQZylwoicQhiYSUHczM93Zk-mJl_yyI17RlQ 
 5. Use this script to run the gateway
    ```bash
    npm run main
