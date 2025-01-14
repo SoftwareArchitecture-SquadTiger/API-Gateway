@@ -96,9 +96,10 @@ router.get("/donation/total-projects/:donorId",authMiddleware(['Donor']), getTot
 router.get("/donation/leaderboard",authMiddleware(["Donor", "Charity"]), getLeaderboard); //GET the leaderboard
 router.get("/donation/capture",authMiddleware(["Admin", "Charity"]), captureDonation); //Capture paypal order
 
-
+router.get("/donation", getAllDonations);
 router.get("/donation/total-donations/charity/:charityId", getDonationAmountByCharityId); //GET total donations for a project
-
+router.get("/donation/total-projects/charity/:charityId", getProjectCountByCharityId); //GET total projects for a charity
+router.get("/donation/donation-list/charity/:charityId", getDonationsByCharityId); //GET all
 
 // Payment
 router.post("/payment", initiatePayment);

@@ -9,6 +9,11 @@ const TEAM_A_BASE_URL = `http://${HOST}:${PORT_A}`;
 export const initiatePayment = async (req, res, next) => {
     try {
         const response = await axios.post(`${TEAM_A_BASE_URL}/api/payments`, req.body);
+        if (response.data.approvalUrl) {
+            res.status(200).json({ approvalUrl: response.data.approvalUrl });
+        } else {
+            res.status(500).json({ error: "Failed to initiate payment" });
+        }
     } catch (error) {
         handleAxiosErrorResponse(error, res);
     }
