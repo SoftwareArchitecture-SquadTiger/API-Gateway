@@ -18,9 +18,9 @@ export const loginUser = async (req, res) => {
       // Set the token as an HTTP-only cookie
       res.cookie('authToken', jwe, {
         httpOnly: true,
-        secure: false, // Set to 'true' in production
+        secure: false, 
         sameSite: 'Lax',
-        path: '/', // Adjust as necessary
+        path: '/', 
         maxAge: 24 * 60 * 60 * 1000,
       });   
       console.log("Cookie set");
