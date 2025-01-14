@@ -31,7 +31,7 @@ import {
     getProjectByCharityId,
     
   } from "../gateway-handlers/A/projectReq.js";
-  import { createDonation, getDonationById, getDonationHistoryByDonor, getTotalDonationAmountByDonor, getTotalProjectsParticipatedByDonor, getLeaderboard, handleSubscriptionSuccess, captureDonation, handlePaypalWebhook, getAllDonations } from "../gateway-handlers/A/donationReq.js";
+  import { createDonation, getDonationById, getDonationHistoryByDonor, getTotalDonationAmountByDonor, getTotalProjectsParticipatedByDonor, getLeaderboard, handleSubscriptionSuccess, captureDonation, handlePaypalWebhook, getAllDonations,getDonationAmountByCharityId } from "../gateway-handlers/A/donationReq.js";
 import {
   createNewDonor,
   deleteDonorById,
@@ -67,6 +67,7 @@ import {
   getTotalDonationsByMonth,
   getTotalDonationsByDonor,
   getDonorLeaderboard,
+  getCharityLeaderboard,
   getTotalDonationForProject,
   getProjectsByCountry,
   getProjectsByCategory,
@@ -165,6 +166,7 @@ router.get("/donation/total-amount/:donorId", getTotalDonationAmountByDonor); //
 router.get("/donation/total-projects/:donorId", getTotalProjectsParticipatedByDonor); //GET the total number of projects a donor has participated in
 router.get("/donation/leaderboard", getLeaderboard); //GET the leaderboard
 router.get("/donation/capture", captureDonation); //GET the leaderboard
+router.get("/donation/total-donations/charity/:charityId", getDonationAmountByCharityId); //GET total donations for a project
 
 // Donation statistics routes
 router.get(
@@ -182,6 +184,10 @@ router.get(
 router.get(
   "/statistics/donors/leaderboard",
   getDonorLeaderboard
+);
+router.get(
+  "/statistics/charities/leaderboard",
+  getCharityLeaderboard
 );
 router.get(
   "/statistics/donations/for-project/:projectId",

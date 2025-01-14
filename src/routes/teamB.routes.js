@@ -45,12 +45,12 @@ import {
   getTotalDonationsByMonth,
   getTotalDonationsByDonor,
   getDonorLeaderboard,
+  getCharityLeaderboard,
   getTotalDonationForProject,
   getProjectsByCountry,
   getProjectsByCategory,
   getProjectsByMonth,
 } from "../gateway-handlers/B/statisticsReq.js";
-import { validate } from "uuid";
 
 const router = express.Router();
 
@@ -137,8 +137,11 @@ router.get(
 );
 router.get(
   "/statistics/donors/leaderboard",
-  authMiddleware(["Donor","Charity"]),
   getDonorLeaderboard
+);
+router.get(
+  "/statistics/charities/leaderboard",
+  getCharityLeaderboard
 );
 router.get(
   "/statistics/donations/for-project/:projectId",

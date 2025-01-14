@@ -57,6 +57,18 @@ export const getDonorLeaderboard = async (req, res) => {
   }
 };
 
+export const getCharityLeaderboard = async (req, res) => {
+  try {
+    const response = await sendKafkaMessageWithResponse("statistics-request", {
+      action: "GET_CHARITY_LEADERBOARD",
+    });
+    
+    res.json(response);
+  } catch (error) {
+    handleAxiosErrorResponse(error, res);
+  }
+};
+
 // Get total donation for a project
 export const getTotalDonationForProject = async (req, res) => {
   try {
