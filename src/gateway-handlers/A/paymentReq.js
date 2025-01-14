@@ -1,93 +1,110 @@
 import axios from "axios";
 import "dotenv/config";
 import { handleAxiosErrorResponse } from "../../utils/errorHandler.js";
+import crypto from "crypto";
 
 const HOST = process.env.HOST;
 const PORT_A = process.env.TEAM_A_PORT;
 const TEAM_A_BASE_URL = `http://${HOST}:${PORT_A}`;
 
+// Initiate a new payment
 export const initiatePayment = async (req, res, next) => {
     try {
         const response = await axios.post(`${TEAM_A_BASE_URL}/api/payments`, req.body);
-        if (response.data.approvalUrl) {
+
+        if (response.data && response.data.approvalUrl) {
             res.status(200).json({ approvalUrl: response.data.approvalUrl });
         } else {
-            res.status(500).json({ error: "Failed to initiate payment" });
+            res.status(500).json({
+                error: {
+                    code: "PAYMENT_INITIATION_FAILED",
+                    message: "Failed to initiate payment: approvalUrl not found",
+                },
+            });
         }
     } catch (error) {
         handleAxiosErrorResponse(error, res);
     }
-}
+};
 
-export const capturePayment = async (req, res, next) => {
-        try {
-            // Extract the payment token (e.g., order ID) from the query parameters
-            const { token } = req.query;
-    
-            // Forward the capture payment request to the appropriate service
-            const response = await axios.get(`${TEAM_A_BASE_URL}/api/payments/capture`, { token });
-    
-            // Respond to the client with the status received from the payment service
-            if (response.data.status === "completed") {
-                res.status(200).json({ message: "Payment captured successfully" });
-            } else {
-                // Handle any failure response from the payment service
-                res.status(500).json({ error: "Payment failed to capture" });
-            }
-        } catch (error) {
-            console.error("Error capturing payment through API Gateway:", error);
-            // Forward the error response to the client
-            handleAxiosErrorResponse(error, res);
+// Capture a PayPal payment (Used internally by handlePaypalWebhook)
+export const capturePayment = async (orderId) => {
+    try {
+        const response = await axios.post(
+            `${TEAM_A_BASE_URL}/api/payments/capture`,
+            { orderId }
+        );
+        return response.data; // Return the response from Team A
+    } catch (error) {
+        console.error("Error capturing payment:", error);
+        throw new Error("Failed to capture payment"); // Re-throw for handling in webhook
+    }
+};
+
+// Handle PayPal Webhook
+export const handlePaypalWebhook = async (req, res, next) => {
+    try {
+        // 1. Verify the webhook signature (IMPORTANT!)
+        const signature = req.headers["paypal-transmission-sig"];
+        const timestamp = req.headers["paypal-transmission-time"];
+        const webhookId = process.env.PAYPAL_WEBHOOK_ID; // Store securely!
+        const eventBody = JSON.stringify(req.body);
+
+        const verificationString = `${timestamp}|${webhookId}|${eventBody}`;
+        const secret = process.env.PAYPAL_WEBHOOK_SECRET; // Store securely!
+        const hmac = crypto.createHmac("sha256", secret);
+        hmac.update(verificationString);
+        const expectedSignature = hmac.digest("hex");
+
+        if (signature !== expectedSignature) {
+            console.error("Invalid PayPal webhook signature!");
+            return res.status(401).send("Invalid signature");
         }
-    };
-    export const handlePaypalWebhook = async (req, res, next) => {  
-        try {
-            // 1. Verify the webhook signature to ensure the request is from PayPal.
-            // Use the PayPal SDK or a library to verify the signature. This step is essential for security.
-    
-            // 2. Extract relevant data from the webhook payload
-            const eventType = req.body.event_type; // Event type (e.g., PAYMENT.CAPTURE.COMPLETED)
-            const resource = req.body.resource;   // Event resource data
-    
-            // 3. Handle different event types
-            switch (eventType) {
-                case "CHECKOUT.ORDER.APPROVED":
-                    // Event triggered when a user approves an order on PayPal
-                    console.log("Checkout order approved:", resource);
-                    break;
-    
-                case "PAYMENT.CAPTURE.COMPLETED":
-                    // Event triggered when a payment is successfully captured
-                    const orderId = resource.supplementary_data.related_ids.order_id;
-                    console.log(`Payment captured for Order ID: ${orderId}`);
-    
-                    // Forward to the appropriate service or update the database
-                    const captureResponse = await axios.post(`${TEAM_A_BASE_URL}/api/payments/capture`, { orderId });
-                    
-                    if (captureResponse.data.status === "completed") {
-                        console.log(`Payment successfully captured for Order ID: ${orderId}`);
-                    } else {
-                        console.error(`Payment capture failed for Order ID: ${orderId}`);
-                    }
-                    break;
-    
-                case "PAYMENT.CAPTURE.DENIED":
-                case "PAYMENT.CAPTURE.FAILED":
-                case "PAYMENT.CAPTURE.PENDING":
-                    // Handle failed, denied, or pending payments
-                    console.warn(`Payment status update required: ${eventType}`, resource);
-                    break;
-    
-                default:
-                    // Log unhandled event types
-                    console.warn(`Unhandled PayPal webhook event type: ${eventType}`);
-            }
-    
-            // 4. Respond with a 200 OK status to acknowledge receipt of the webhook
-            res.status(200).send("Webhook received");
-        } catch (error) {
-            // Handle errors and send a 500 response to indicate server issues
-            console.error("Error handling PayPal webhook:", error);
-            handleAxiosErrorResponse(error, res);
+
+        // 2. Extract relevant data
+        const eventType = req.body.event_type;
+        const resource = req.body.resource;
+
+        // 3. Handle event types
+        switch (eventType) {
+            case "CHECKOUT.ORDER.APPROVED":
+                console.log("Checkout order approved:", resource);
+                break;
+
+            case "PAYMENT.CAPTURE.COMPLETED":
+                const orderId = resource.supplementary_data.related_ids.order_id;
+                console.log(`Payment captured for Order ID: ${orderId}`);
+
+                // Capture the payment
+                const paymentResponse = await capturePayment(orderId);
+
+                if (paymentResponse.status !== "completed") {
+                    console.error(
+                        `Payment capture failed for Order ID: ${orderId}`,
+                        paymentResponse
+                    );
+                } else {
+                    console.log("Payment captured successfully.");
+                    // Trigger donation creation (either here or via another webhook/event)
+                }
+                break;
+
+            case "PAYMENT.CAPTURE.DENIED":
+            case "PAYMENT.CAPTURE.FAILED":
+            case "PAYMENT.CAPTURE.PENDING":
+                console.warn(`Payment status update required: ${eventType}`, resource);
+                break;
+
+            default:
+                console.warn(`Unhandled PayPal webhook event type: ${eventType}`);
         }
-    };
+
+        // 4. Acknowledge receipt
+        res.status(200).send("Webhook received");
+    } catch (error) {
+        console.error("Error handling PayPal webhook:", error);
+        res.status(500).json({
+            error: { code: "WEBHOOK_ERROR", message: error.message },
+        });
+    }
+};
