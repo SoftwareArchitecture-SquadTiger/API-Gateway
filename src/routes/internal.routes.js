@@ -5,33 +5,45 @@ import { encryptUsingJWE, encryptData  } from "../gateway-handlers/A/encryptionR
 import { decryptUsingJWE, decryptData } from "../gateway-handlers/A/decryptionReq.js";
 import { generateKeyPair, fetchPublicKey, fetchPrivateKey, updateKeyPair, deleteKeyPair } from "../gateway-handlers/A/keyReq.js";
 import { apiKeyMiddleware } from "../middlewares/apiKeyMiddleware.js";
-import { authMiddleware } from "../middlewares/authMiddleware.js";
 import {
-    createNewProject,
-    getAllProjects,
-    getProjectById,
-    updateProjectById,
-    deleteProjectById,
-    getProjectByStatus,
-    getProjectByRegion,
-    getProjectByCurrentAmountLte,
-    getProjectByCurrentAmountGte,
-    getProjectByCountry,
-    filterProjectByDate,
-    sortProjectByCurrentAmountDesc,
-    sortProjectByCurrentAmountAsc,
-    sortProjectByTargetAmountAsc,
-    sortProjectByTargetAmountDesc,
-    getProjectByCategory,
-    getCharityByID,
-    getProjectByTargetAmountGte,
-    getProjectByTargetAmountLte,
-    getProjectByCharityName,
-    getProjectByTitle,
-    getProjectByCharityId,
-    
-  } from "../gateway-handlers/A/projectReq.js";
-  import { createDonation, getDonationById, getDonationHistoryByDonor, getTotalDonationAmountByDonor, getTotalProjectsParticipatedByDonor, getLeaderboard, handleSubscriptionSuccess, captureDonation, handlePaypalWebhook, getAllDonations,getDonationAmountByCharityId } from "../gateway-handlers/A/donationReq.js";
+  createNewProject,
+  getAllProjects,
+  getProjectById,
+  updateProjectById,
+  deleteProjectById,
+  getProjectByStatus,
+  getProjectByRegion,
+  getProjectByCurrentAmountLte,
+  getProjectByCurrentAmountGte,
+  getProjectByCountry,
+  filterProjectByDate,
+  sortProjectByCurrentAmountDesc,
+  sortProjectByCurrentAmountAsc,
+  sortProjectByTargetAmountAsc,
+  sortProjectByTargetAmountDesc,
+  getProjectByCategory,
+  getCharityByID,
+  getProjectByTargetAmountGte,
+  getProjectByTargetAmountLte,
+  getProjectByCharityName,
+  getProjectByTitle,
+  getProjectByCharityId,
+} from "../gateway-handlers/A/projectReq.js";
+
+import { 
+  createDonation, 
+  getDonationById, 
+  getDonationHistoryByDonor, 
+  getTotalDonationAmountByDonor, 
+  getTotalProjectsParticipatedByDonor, 
+  getLeaderboard, 
+  handleSubscriptionSuccess, 
+  captureDonation, 
+  handlePaypalWebhook, 
+  getAllDonations,
+  getDonationAmountByCharityId 
+} from "../gateway-handlers/A/donationReq.js";
+
 import {
   createNewDonor,
   deleteDonorById,
@@ -62,6 +74,7 @@ import{
   loginUser,
   registerUser,
 } from "../gateway-handlers/B/authReq.js";
+
 import {
   getTotalDonationsByDay,
   getTotalDonationsByMonth,
@@ -170,42 +183,16 @@ router.get("/donation/total-donations/charity/:charityId", getDonationAmountByCh
 
 // Donation statistics routes
 router.get(
-  "/statistics/donations/by-day",
-  getTotalDonationsByDay
-);
-router.get(
-  "/statistics/donations/by-month",
-  getTotalDonationsByMonth
-)
-router.get(
-  "/statistics/donations/by-donor/:donorId",
-  getTotalDonationsByDonor
-);
-router.get(
-  "/statistics/donors/leaderboard",
-  getDonorLeaderboard
-);
-router.get(
-  "/statistics/charities/leaderboard",
-  getCharityLeaderboard
-);
-router.get(
-  "/statistics/donations/for-project/:projectId",
-  getTotalDonationForProject
-);
+  "/statistics/donations/by-day", getTotalDonationsByDay);
+router.get("/statistics/donations/by-month", getTotalDonationsByMonth);
+router.get("/statistics/donations/by-donor/:donorId", getTotalDonationsByDonor);
+router.get("/statistics/donors/leaderboard", getDonorLeaderboard);
+router.get("/statistics/charities/leaderboard", getCharityLeaderboard);
+router.get("/statistics/donations/for-project/:projectId", getTotalDonationForProject);
 
 // Project statistics routes
-router.get(
-  "/statistics/projects/by-country",
-  getProjectsByCountry
-);
-router.get(
-  "/statistics/projects/by-category",
-  getProjectsByCategory
-);
-router.get(
-  "/statistics/projects/by-month",
-  getProjectsByMonth
-);
+router.get("/statistics/projects/by-country", getProjectsByCountry);
+router.get("/statistics/projects/by-category", getProjectsByCategory);
+router.get("/statistics/projects/by-month", getProjectsByMonth);
 
 export default router;
