@@ -41,7 +41,7 @@ Before running the API Gateway, ensure that the following dependencies are set u
 
     #Redis Config
     REDIS_PORT=6379
-    REDIS_HOST<Redis container IPv4 address>
+    REDIS_HOST=<Redis container IPv4 address>
     REDIS_PASSWORD=iamAdmin
 
     #Auth
