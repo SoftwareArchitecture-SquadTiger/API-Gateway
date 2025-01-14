@@ -124,3 +124,36 @@ export const getLeaderboard = async (req, res) => {
         handleAxiosErrorResponse(error, res);
     }
 }
+
+export const getDonationAmountByCharityId = async (req, res, next) => {
+    try {
+      const { charityId } = req.params;
+      const { month, year } = req.query;
+      const donation = await axios.get(`${TEAM_A_BASE_URL}/api/donations/charity/total-donations/${charityId}?month=${month}&year=${year}`);
+      res.status(donation.status).json({ donationResponse: donation.data });
+    } catch (error) {
+      handleAxiosErrorResponse(error, res);
+    }
+  };
+
+
+export const getProjectCountByCharityId = async (req, res, next) => {
+    try {
+      const { charityId } = req.params;
+      const projectCount = await axios.get(`${TEAM_A_BASE_URL}/api/donations/charity/project-count/${charityId}`);
+      res.status(projectCount.status).json({ projectCountResponse: projectCount.data });
+    } catch (error) {
+      handleAxiosErrorResponse(error, res);
+    }
+  };
+
+export const getDonationsByCharityId = async (req, res, next) => {
+    try {
+      const { charityId } = req.params;
+      const donations = await axios.get(`${TEAM_A_BASE_URL}/api/donations/charity/donations/${charityId}`);
+      res.status(donations.status).json({ donationsResponse: donations.data });
+    } catch (error) {
+      handleAxiosErrorResponse(error, res);
+    }
+  };
+
